@@ -895,7 +895,7 @@ const TESTERS={
     // On the radar: clicking a provider name opens their profile drawer (delegated, items re-render per persona)
     document.addEventListener('click',function(e){var a=e.target.closest('.radar-name'); if(!a)return;
       e.preventDefault(); var prog=a.getAttribute('data-prog')||'';
-      openDrawer(a.getAttribute('data-name')||'Provider', prog, prog, '', 'profile');});
+      openDrawer(a.getAttribute('data-name')||'Provider', prog, prog, '', 'flags');});
   }
 })();
 </script>
