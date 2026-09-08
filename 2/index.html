@@ -706,7 +706,9 @@ document.querySelectorAll('.navlinks a[data-view]').forEach(a=>a.addEventListene
 // Persona hashes (#director #manager #exec #admin) still work for a generic view.
 const TESTERS={
   marybeth:{persona:'manager',first:'Mary Beth',name:'Mary Beth Newkirk',role:'APP Manager',initials:'MN',greet:'Good morning'},
-  ryan:{persona:'exec',first:'Ryan',name:'Ryan Arias',role:'Chief Medical Officer',initials:'RA',greet:'Good afternoon'}
+  ryan:{persona:'exec',first:'Ryan',name:'Ryan Arias',role:'Chief Medical Officer',initials:'RA',greet:'Good afternoon'},
+  chris:{persona:'director',first:'Chris',name:'Chris Ferron',role:'APP Director',initials:'CF',greet:'Good afternoon'},
+  cara:{persona:'manager',first:'Cara',name:'Cara Keating',role:'APP Manager',initials:'CK',greet:'Good afternoon'}
 };
 (function(){var h=(location.hash.slice(1)||'').toLowerCase();
   if(TESTERS[h]){window.__tester=TESTERS[h];render(TESTERS[h].persona);}
