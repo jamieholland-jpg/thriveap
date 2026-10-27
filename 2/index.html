@@ -248,7 +248,7 @@
   .login-overlay{position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;padding:24px;background:var(--bg);}
   .login-overlay.show{display:flex;}
   .login-card{width:100%;max-width:410px;background:radial-gradient(150% 120% at 50% -120px, #F2F0FB, #ffffff 72%);border:1px solid var(--border);border-radius:18px;box-shadow:0 10px 40px rgba(37,35,70,.10);padding:38px 38px 26px;}
-  .login-steps{position:relative;min-height:290px;}
+  .login-steps{position:relative;min-height:335px;}
   .login-step{transition:opacity .28s ease, transform .28s ease;}
   .login-logo{margin-bottom:34px;line-height:0;text-align:center;}
   .login-logo svg,.login-logo img{height:44px;width:auto;margin:0 auto;}
@@ -742,18 +742,21 @@
       <div class="login-steps">
       <div class="login-step" id="loginEmail">
         <h2 class="login-h">Sign in</h2>
-        <p class="login-sub">Enter your email and we will send you a 6-digit code to sign in.</p>
+        <p class="login-sub">Enter your email and password to continue.</p>
         <label class="login-label" for="loginEmailInput">Email</label>
         <input class="login-input" id="loginEmailInput" type="email" autocomplete="email" placeholder="you@organization.org" value="alicia.monroe@summahealth.org">
+        <label class="login-label" for="loginPwInput">Password</label>
+        <input class="login-input" id="loginPwInput" type="password" autocomplete="current-password" placeholder="Your password" value="prototype-demo">
         <button class="login-btn" id="loginEmailBtn">Continue</button>
+        <div class="login-links"><a href="#" id="loginForgot">Forgot password?</a></div>
       </div>
       <div class="login-step" id="loginCode" style="display:none">
-        <h2 class="login-h">Check your email</h2>
-        <p class="login-sub">We sent a 6-digit code to your email. Enter it below to finish signing in.</p>
-        <label class="login-label" for="loginCodeInput">Verification code</label>
+        <h2 class="login-h">Two-step verification</h2>
+        <p class="login-sub">Open your Microsoft Authenticator app and enter the 6-digit code for ThriveIQ.</p>
+        <label class="login-label" for="loginCodeInput">Authenticator code</label>
         <input class="login-input login-code-input" id="loginCodeInput" type="text" inputmode="numeric" maxlength="6" placeholder="------">
         <button class="login-btn" id="loginCodeBtn" disabled>Verify and sign in</button>
-        <div class="login-links"><a href="#" id="loginResend">Resend code</a><a href="#" id="loginBackEmail">Use a different email</a></div>
+        <div class="login-links"><a href="#" id="loginResend">Use a recovery code</a><a href="#" id="loginBackEmail">Back</a></div>
       </div>
       </div>
       <div class="login-foot"><svg class="login-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>Protected by two-step verification</div>
@@ -884,7 +887,9 @@ if(_lc){_lc.addEventListener('click',function(e){e.preventDefault();hideLogin();
 var _lb=document.getElementById('loginBackEmail');
 if(_lb){_lb.addEventListener('click',function(e){e.preventDefault();_loFade(_stepEmail,_stepCode);});}
 var _lr=document.getElementById('loginResend'); if(_lr){_lr.addEventListener('click',function(e){e.preventDefault();});}
-var _lei=document.getElementById('loginEmailInput'); if(_lei)_lei.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();_le.click();}});
+var _lei=document.getElementById('loginEmailInput'); if(_lei)_lei.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();var pw=document.getElementById('loginPwInput');if(pw){pw.focus();}else{_le.click();}}});
+var _lpw=document.getElementById('loginPwInput'); if(_lpw)_lpw.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();_le.click();}});
+var _lf=document.getElementById('loginForgot'); if(_lf){_lf.addEventListener('click',function(e){e.preventDefault();});}
 var _lci=document.getElementById('loginCodeInput'); if(_lci)_lci.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();if(_lc&&!_lc.disabled)_lc.click();}});
 if(_lci)_lci.addEventListener('input',function(){this.value=this.value.replace(/\D/g,'').slice(0,6);if(_lc)_lc.disabled=this.value.length!==6;});
 if((location.hash.slice(1)||'').toLowerCase()==='login')showLogin();
