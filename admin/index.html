@@ -657,6 +657,7 @@
   .btn-ghost{background:#fff;color:var(--ink);border:1px solid var(--border);}
   .btn-ghost:hover{border-color:var(--blue);color:var(--blue);}
   .btn-danger{background:var(--red);color:#fff;}
+  .btn:disabled{opacity:.45;cursor:not-allowed;}
   .finp,.fsel{box-sizing:border-box;width:100%;border:1px solid var(--border);border-radius:9px;padding:10px 12px;font-family:'Switzer',system-ui,sans-serif;font-size:14px;color:var(--ink);background:#fff;outline:none;}
   .finp:focus,.fsel:focus{border-color:var(--blue);}
   /* custom chevron inset 12px from the right, matching the 12px text inset on the left */
@@ -716,7 +717,7 @@
       <div class="usermenu">
         <div class="avatar" id="avatarBtn" role="button" tabindex="0" aria-haspopup="true" aria-label="Account menu">BG</div>
         <div class="menu" id="userMenu">
-          <div class="mhead"><div class="mname">Brandi Gilbert</div><div class="mrole">Super admin &middot; ThriveAP</div></div>
+          <div class="mhead"><div class="mname">Brandi Gilbert</div><div class="mrole">ThriveAP admin</div></div>
           <div class="sep"></div>
           <a href="#" class="mlogout">Log out</a>
         </div>
@@ -741,7 +742,7 @@
               <div class="orglist" id="orgList"></div>
             </div></div>
           <div class="filterwrap"><button class="filterbtn" id="filterBtn">Filter <span class="chev">&#9662;</span></button>
-            <div class="filtermenu" id="filterMenu"><div class="fm-sec">Persona</div><label><input type="checkbox" data-f="persona" value="Director"> Director</label><label><input type="checkbox" data-f="persona" value="Manager"> Manager</label><label><input type="checkbox" data-f="persona" value="Executive"> Executive</label><label><input type="checkbox" data-f="persona" value="Administrator"> Administrator</label><label><input type="checkbox" data-f="persona" value="Super admin"> Super admin</label><div class="fm-sec">Status</div><label><input type="checkbox" data-f="status" value="Active"> Active</label><label><input type="checkbox" data-f="status" value="Invited"> Invited</label><label><input type="checkbox" data-f="status" value="Suspended"> Suspended</label><label><input type="checkbox" data-f="status" value="Expired"> Expired</label><div class="fm-foot"><button type="button" class="fm-reset" id="fmReset">Clear all</button></div></div></div>
+            <div class="filtermenu" id="filterMenu"><div class="fm-sec">Persona</div><label><input type="checkbox" data-f="persona" value="Director"> Director</label><label><input type="checkbox" data-f="persona" value="Manager"> Manager</label><label><input type="checkbox" data-f="persona" value="Executive"> Executive</label><label><input type="checkbox" data-f="persona" value="Administrator"> Administrator</label><label><input type="checkbox" data-f="persona" value="ThriveAP admin"> ThriveAP admin</label><div class="fm-sec">Status</div><label><input type="checkbox" data-f="status" value="Active"> Active</label><label><input type="checkbox" data-f="status" value="Invited"> Invited</label><label><input type="checkbox" data-f="status" value="Disabled"> Disabled</label><label><input type="checkbox" data-f="status" value="Expired"> Expired</label><div class="fm-foot"><button type="button" class="fm-reset" id="fmReset">Clear all</button></div></div></div>
         </div>
       </div>
       <div class="pt-scrollwrap"><div class="ptwrap">
@@ -768,7 +769,7 @@
     <div class="dbody">
       <div class="frow"><div class="fld"><label>First name</label><input class="finp" id="fFirst"></div><div class="fld"><label>Last name</label><input class="finp" id="fLast"></div></div>
       <div class="fld"><label>Email</label><input class="finp" id="fEmail" type="email" placeholder="name@client.org"></div>
-      <div class="fld"><label>Persona</label><select class="fsel" id="fPersona"><option>Director</option><option>Manager</option><option>Executive</option><option>Administrator</option><option>Super admin</option></select></div>
+      <div class="fld"><label>Persona</label><select class="fsel" id="fPersona"><option>Director</option><option>Manager</option><option>Executive</option><option>Administrator</option><option>ThriveAP admin</option></select></div>
       <div class="fld" id="orgFld"><label>Client</label><select class="fsel" id="fOrg"><option>Cumberland Health System</option><option>GoHealth</option><option>Riverside Medical Group</option></select></div>
       <div class="fld" id="siteFld"><label>Site</label><select class="fsel" id="fSite"><option>All sites</option><option>Main Campus</option><option>North Clinic</option><option>Riverside Center</option><option>West Tower</option></select></div>
       <div class="fld" id="statusFld"><label>Status</label><div id="fStatusRO" style="padding-top:2px"></div></div>
@@ -779,7 +780,6 @@
         <div class="roline"><span class="rol-l">Password changed</span><span class="rol-v" id="roPwd">&mdash;</span></div>
         <div class="roline"><span class="rol-l">Two-step authentication</span><span class="rol-v" id="ro2fa">&mdash;</span></div>
         <div class="roline"><span class="rol-l">Sign-in status</span><span class="rol-v" id="roLocked">&mdash;</span></div>
-        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap"><button class="btn btn-ghost" id="btnResetPwd" type="button">Send password reset</button><button class="btn btn-ghost" id="btnReset2fa" type="button">Reset authenticator</button></div>
       </div>
       <div class="prov-note" id="inviteNote">On invite, the user gets an email to set a password and link an authenticator app (TOTP), then receives recovery codes.</div>
     </div>
@@ -787,17 +787,24 @@
   </div>
 
   <div class="modal" id="confirm">
-    <div class="mbox"><h3>Deactivate user?</h3><p>This revokes access and signs the user out of all sessions. Their history is kept and you can re-invite them later.</p><div class="mbtns"><button class="btn btn-ghost" id="cCancel">Cancel</button><button class="btn btn-danger" id="cOk">Deactivate</button></div></div>
+    <div class="mbox"><h3>Delete user?</h3><p>This permanently deletes the account and cannot be undone. Type the user's email to confirm.</p><input class="finp" id="delEmail" autocomplete="off" style="margin-bottom:16px"><div class="mbtns"><button class="btn btn-ghost" id="cCancel">Cancel</button><button class="btn btn-danger" id="cOk" disabled>Delete</button></div></div>
+  </div>
+  <div class="modal" id="reset2faModal">
+    <div class="mbox"><h3>Reset two-step verification?</h3><p>This unlinks the authenticator and prompts the user to re-enroll with fresh recovery codes.</p><div class="roline"><span class="rol-l">Password last changed</span><span class="rol-v" id="r2faDate">&mdash;</span></div><p class="prov-note" style="margin-top:12px">Confirm it's really the user through a channel other than email. If the password changed recently and they didn't change it, disable the account and investigate instead.</p><div class="mbtns"><button class="btn btn-ghost" id="r2faCancel">Cancel</button><button class="btn btn-pri" id="r2faOk">Reset two-step</button></div></div>
+  </div>
+  <div class="modal" id="reinviteModal">
+    <div class="mbox"><h3>Re-invite this user?</h3><p>This signs them out everywhere, removes their password and authenticator, and emails a new invite.</p><div class="roline"><span class="rol-l">Password last changed</span><span class="rol-v" id="reinvDate">&mdash;</span></div><p class="prov-note" style="margin-top:12px">Confirm it's really the user through a channel other than email before continuing.</p><div class="mbtns"><button class="btn btn-ghost" id="reinvCancel">Cancel</button><button class="btn btn-pri" id="reinvOk">Re-invite</button></div></div>
   </div>
 
   <div class="rowmenu" id="rowMenu" role="menu">
     <button id="rmEdit" role="menuitem">Edit user</button>
-    <button id="rmPwd" role="menuitem">Send password reset</button>
-    <button id="rm2fa" role="menuitem">Reset authenticator</button>
+    <button id="rmResend" role="menuitem">Resend invite</button>
     <button id="rmReinvite" role="menuitem">Re-invite</button>
+    <button id="rm2fa" role="menuitem">Reset authenticator</button>
     <div class="rm-sep" id="rmSep"></div>
-    <button id="rmReactivate" role="menuitem">Reactivate</button>
-    <button id="rmDeactivate" class="danger" role="menuitem">Deactivate</button>
+    <button id="rmEnable" role="menuitem">Enable</button>
+    <button id="rmDisable" role="menuitem">Disable</button>
+    <button id="rmDelete" class="danger" role="menuitem">Delete</button>
   </div>
 
   <div class="login-overlay" id="loginOverlay">
@@ -828,22 +835,29 @@
   </div>
 
 <script>
-const USERS = [{"first": "Alicia", "last": "Monroe", "email": "alicia.monroe@gohealth.org", "persona": "Director", "org": "GoHealth", "site": "All sites", "status": "Active", "expire": "2027-06-30", "login": "2026-10-28", "pwd": "2026-09-02", "twofa": true}, {"first": "Marcus", "last": "Reed", "email": "marcus.reed@gohealth.org", "persona": "Manager", "org": "GoHealth", "site": "North Clinic", "status": "Active", "expire": "", "login": "2026-10-27", "pwd": "2026-08-15", "twofa": true, "locked": "Oct 29, 3:40 PM"}, {"first": "Diane", "last": "Okafor", "email": "diane.okafor@gohealth.org", "persona": "Executive", "org": "GoHealth", "site": "All sites", "status": "Active", "expire": "", "login": "2026-10-20", "pwd": "2026-07-30", "twofa": true}, {"first": "Jordan", "last": "Ellis", "email": "jordan.ellis@gohealth.org", "persona": "Administrator", "org": "GoHealth", "site": "All sites", "status": "Invited", "expire": "2026-12-31", "login": "Never", "pwd": "Pending", "twofa": false}, {"first": "Priya", "last": "Anand", "email": "priya.anand@cumberland.org", "persona": "Manager", "org": "Cumberland Health System", "site": "West Tower", "status": "Active", "expire": "", "login": "2026-10-25", "pwd": "2026-09-19", "twofa": true, "locked": "Oct 30, 9:15 AM"}, {"first": "Tom", "last": "Becker", "email": "tom.becker@cumberland.org", "persona": "Director", "org": "Cumberland Health System", "site": "All sites", "status": "Suspended", "expire": "", "login": "2026-09-10", "pwd": "2026-06-01", "twofa": true}, {"first": "Dana", "last": "Whitfield", "email": "dana.whitfield@riverside.org", "persona": "Manager", "org": "Riverside Medical Group", "site": "Main Campus", "status": "Invited", "expire": "2026-11-30", "login": "Never", "pwd": "Pending", "twofa": false}, {"first": "Ben", "last": "Ortiz", "email": "ben.ortiz@riverside.org", "persona": "Executive", "org": "Riverside Medical Group", "site": "All sites", "status": "Expired", "expire": "2026-10-01", "login": "2026-09-28", "pwd": "2026-05-12", "twofa": true}, {"first": "Veronica", "last": "", "email": "veronica@thriveap.com", "persona": "Super admin", "org": "All clients", "site": "", "status": "Active", "expire": "", "login": "2026-10-28", "pwd": "2026-10-01", "twofa": true}];
+const USERS = [{"first": "Alicia", "last": "Monroe", "email": "alicia.monroe@gohealth.org", "persona": "Director", "org": "GoHealth", "site": "All sites", "status": "Active", "expire": "2027-06-30", "login": "2026-10-28", "pwd": "2026-09-02", "twofa": true}, {"first": "Marcus", "last": "Reed", "email": "marcus.reed@gohealth.org", "persona": "Manager", "org": "GoHealth", "site": "North Clinic", "status": "Active", "expire": "", "login": "2026-10-27", "pwd": "2026-08-15", "twofa": true, "locked": "Oct 29, 3:40 PM"}, {"first": "Diane", "last": "Okafor", "email": "diane.okafor@gohealth.org", "persona": "Executive", "org": "GoHealth", "site": "All sites", "status": "Active", "expire": "", "login": "2026-10-20", "pwd": "2026-07-30", "twofa": true}, {"first": "Jordan", "last": "Ellis", "email": "jordan.ellis@gohealth.org", "persona": "Administrator", "org": "GoHealth", "site": "All sites", "status": "Invited", "expire": "2026-12-31", "login": "Never", "pwd": "Pending", "twofa": false}, {"first": "Priya", "last": "Anand", "email": "priya.anand@cumberland.org", "persona": "Manager", "org": "Cumberland Health System", "site": "West Tower", "status": "Active", "expire": "", "login": "2026-10-25", "pwd": "2026-09-19", "twofa": true, "locked": "Oct 30, 9:15 AM"}, {"first": "Tom", "last": "Becker", "email": "tom.becker@cumberland.org", "persona": "Director", "org": "Cumberland Health System", "site": "All sites", "status": "Disabled", "expire": "", "login": "2026-09-10", "pwd": "2026-06-01", "twofa": true}, {"first": "Dana", "last": "Whitfield", "email": "dana.whitfield@riverside.org", "persona": "Manager", "org": "Riverside Medical Group", "site": "Main Campus", "status": "Invited", "expire": "2026-11-30", "login": "Never", "pwd": "Pending", "twofa": false}, {"first": "Ben", "last": "Ortiz", "email": "ben.ortiz@riverside.org", "persona": "Executive", "org": "Riverside Medical Group", "site": "All sites", "status": "Active", "expire": "2026-10-01", "login": "2026-09-28", "pwd": "2026-05-12", "twofa": true}, {"first": "Veronica", "last": "", "email": "veronica@thriveap.com", "persona": "ThriveAP admin", "org": "All clients", "site": "", "status": "Active", "expire": "", "login": "2026-10-28", "pwd": "2026-10-01", "twofa": true}];
 let data = USERS.map(u => Object.assign({}, u));
-let editIdx=null, pendingDelete=null, sortCol=0, sortDir=1, menuRowIdx=null, selectedOrg='';
+let editIdx=null, pendingDelete=null, sortCol=0, sortDir=1, menuRowIdx=null, selectedOrg='', reinvIdx=null, r2faIdx=null;
 const $ = id => document.getElementById(id);
 const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 function fmtDate(v){ if(!v||v==='Never'||v==='Pending') return v||''; const p=v.split('-'); return p.length===3 ? p[1]+'/'+p[2]+'/'+p[0].slice(2) : v; }
+const TODAY=new Date().toISOString().slice(0,10);
+// "Expired" is NOT a stored status (only invited/active/disabled). It's derived when an active account's expiry has passed.
+function effectiveStatus(u){ return (u.status==='Active' && u.expire && u.expire<TODAY) ? 'Expired' : u.status; }
 
 // account + filter menus
 const ab=$('avatarBtn'), um=$('userMenu'), fbtn=$('filterBtn'), fmenu=$('filterMenu');
 function closeRowMenu(){ const rm=$('rowMenu'); if(rm) rm.classList.remove('open'); menuRowIdx=null; }
 function openRowMenu(idx, btn){
-  menuRowIdx=idx; const rm=$('rowMenu'); const isSuper=data[idx].persona==='Super admin';
-  var st=data[idx].status;
-  $('rmSep').style.display=isSuper?'none':'block';
-  $('rmDeactivate').style.display=(!isSuper && st!=='Suspended')?'block':'none';
-  $('rmReactivate').style.display=(!isSuper && st==='Suspended')?'block':'none';
+  menuRowIdx=idx; const rm=$('rowMenu'); var u=data[idx]; var st=effectiveStatus(u); var isAdmin=u.persona==='ThriveAP admin';
+  function sh(id,c){var e=$(id); if(e)e.style.display=c?'block':'none';}
+  sh('rmResend', !isAdmin && st==='Invited');
+  sh('rmReinvite', !isAdmin && st==='Active');
+  sh('rm2fa', st==='Active');
+  sh('rmEnable', !isAdmin && st==='Disabled');
+  sh('rmDisable', !isAdmin && st==='Active');
+  sh('rmDelete', !isAdmin);
+  sh('rmSep', !isAdmin);
   rm.classList.add('open');
   const r=btn.getBoundingClientRect(); let left=r.right-rm.offsetWidth; if(left<8)left=8;
   let top=r.bottom+4; if(top+rm.offsetHeight>window.innerHeight-8) top=r.top-rm.offsetHeight-4;
@@ -881,12 +895,12 @@ orgBtn.addEventListener('click', e=>{ e.stopPropagation(); const o=orgMenu.class
 orgMenu.addEventListener('click', e=>e.stopPropagation());
 orgSearch.addEventListener('input', renderOrgList);
 
-function personaBadge(p){ return '<span class="badge '+(p==='Super admin'?'b-super':'b-persona')+'">'+p+'</span>'; }
-function statusBadge(s){ const m={Active:'b-active',Invited:'b-invited',Suspended:'b-suspended',Expired:'b-expired'}; return '<span class="badge '+(m[s]||'b-suspended')+'">'+s+'</span>'; }
+function personaBadge(p){ return '<span class="badge '+(p==='ThriveAP admin'?'b-super':'b-persona')+'">'+p+'</span>'; }
+function statusBadge(s){ const m={Active:'b-active',Invited:'b-invited',Disabled:'b-suspended',Expired:'b-expired'}; return '<span class="badge '+(m[s]||'b-suspended')+'">'+s+'</span>'; }
 function twofaBadge(t){ return t ? '<span class="badge b-2fa">Enrolled</span>' : '<span class="badge b-no2fa">Not set</span>'; }
 function lockedCell(u){ return u.locked ? '<span class="badge b-locked" title="Locked until '+esc(u.locked)+'. Temporary lockout from repeated failed sign-ins; clears on its own, or via Reset authenticator or Re-invite."><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Locked</span>' : '<span class="mut">&mdash;</span>'; }
-function scopeCell(u){ if(u.persona==='Super admin') return '<span class="mut">All clients</span>';
-  const sub=(u.persona==='Manager')?u.site:'All sites'; return '<div>'+esc(u.org)+'</div><div class="psub">'+esc(sub)+'</div>'; }
+function scopeCell(u){ if(u.persona==='ThriveAP admin') return '<span class="mut">All clients</span>';
+  const sub=(u.persona==='Manager')?u.site:'Org-wide'; return '<div>'+esc(u.org)+'</div><div class="psub">'+esc(sub)+'</div>'; }
 function dash(v){ return v ? esc(v) : '<span class="mut">&mdash;</span>'; }
 
 function matches(u){
@@ -895,14 +909,14 @@ function matches(u){
   if(q){ const hay=((u.first||'')+' '+(u.last||'')+' '+(u.email||'')).toLowerCase(); if(hay.indexOf(q)<0) return false; }
   const fsel={};
   fmenu.querySelectorAll('input[data-f]:checked').forEach(cb=>{ (fsel[cb.dataset.f]=fsel[cb.dataset.f]||[]).push(cb.value); });
-  for(const f in fsel){ if(fsel[f].indexOf(u[f])<0) return false; }
+  for(const f in fsel){ const val=(f==='status')?effectiveStatus(u):u[f]; if(fsel[f].indexOf(val)<0) return false; }
   return true;
 }
 function sortVal(u,c){ switch(c){
   case 0: return ((u.last||'')+(u.first||'')).toLowerCase();
   case 1: return u.persona||'';
-  case 2: return u.persona==='Super admin' ? 'All clients' : ((u.org||'')+(u.persona==='Manager'?u.site:''));
-  case 3: return u.status||'';
+  case 2: return u.persona==='ThriveAP admin' ? 'All clients' : ((u.org||'')+(u.persona==='Manager'?u.site:''));
+  case 3: return effectiveStatus(u)||'';
   case 4: return u.expire||'';
   case 5: return u.login==='Never'?'':u.login;
   case 6: return u.pwd==='Pending'?'':u.pwd;
@@ -922,7 +936,7 @@ function render(){
       '<td class="l" data-edit="'+i+'"><div class="pnm">'+name+'</div><div class="psub">'+esc(u.email)+'</div></td>'+
       '<td class="tl">'+personaBadge(u.persona)+'</td>'+
       '<td class="tl">'+scopeCell(u)+'</td>'+
-      '<td class="tl">'+statusBadge(u.status)+'</td>'+
+      '<td class="tl">'+statusBadge(effectiveStatus(u))+'</td>'+
       '<td class="tl">'+(u.expire?esc(fmtDate(u.expire)):'<span class="mut">Never</span>')+'</td>'+
       '<td class="tl">'+(u.login==='Never'?'<span class="mut">Never</span>':esc(fmtDate(u.login)))+'</td>'+
       '<td class="tl">'+(u.pwd==='Pending'?'<span class="mut">Pending</span>':esc(fmtDate(u.pwd)))+'</td>'+
@@ -948,7 +962,7 @@ $('search').addEventListener('input', render);
 
 // drawer
 function syncScopeFields(){ const p=$('fPersona').value;
-  $('orgFld').style.display=(p==='Super admin')?'none':'block';
+  $('orgFld').style.display=(p==='ThriveAP admin')?'none':'block';
   $('siteFld').style.display=(p==='Manager')?'block':'none'; }
 function openDrawer(idx){
   editIdx=idx; const isNew=idx===null;
@@ -956,12 +970,13 @@ function openDrawer(idx){
   $('dTitle').textContent=isNew?'Invite user':'Edit user';
   $('dSave').textContent=isNew?'Send invite':'Save changes';
   $('fFirst').value=u.first; $('fLast').value=u.last; $('fEmail').value=u.email;
+  $('fEmail').readOnly=!isNew; $('fEmail').style.background=isNew?'#fff':'var(--surface-2)';  // email is write-once (API)
   $('fPersona').value=u.persona; $('fExpire').value=u.expire||'';
-  if(u.org && u.persona!=='Super admin') $('fOrg').value=u.org;
+  if(u.org && u.persona!=='ThriveAP admin') $('fOrg').value=u.org;
   $('fSite').value=u.site||'All sites';
   syncScopeFields();
   $('statusFld').style.display=isNew?'none':'block';
-  if(!isNew) $('fStatusRO').innerHTML=statusBadge(u.status);
+  if(!isNew) $('fStatusRO').innerHTML=statusBadge(effectiveStatus(u));
   $('securitySec').style.display=isNew?'none':'block';
   $('inviteNote').style.display=isNew?'block':'none';
   if(!isNew){ $('roLast').innerHTML=u.login==='Never'?'Never':esc(fmtDate(u.login));
@@ -974,7 +989,7 @@ function closeDrawer(){ $('scrim').classList.remove('open'); $('drawer').classLi
 function saveDrawer(){
   const p=$('fPersona').value;
   const rec={ first:$('fFirst').value.trim(), last:$('fLast').value.trim(), email:$('fEmail').value.trim(),
-    persona:p, org:(p==='Super admin'?'All clients':$('fOrg').value),
+    persona:p, org:(p==='ThriveAP admin'?'All clients':$('fOrg').value),
     site:(p==='Manager'?$('fSite').value:'All sites'), expire:$('fExpire').value };
   if(editIdx===null){ data.unshift(Object.assign({login:'Never',pwd:'Pending',twofa:false,status:'Invited'}, rec)); }
   else { data[editIdx]=Object.assign({}, data[editIdx], rec); }
@@ -983,27 +998,33 @@ function saveDrawer(){
 $('inviteBtn').onclick=()=>openDrawer(null);
 $('dClose').onclick=closeDrawer; $('dCancel').onclick=closeDrawer; $('scrim').onclick=closeDrawer;
 $('dSave').onclick=saveDrawer; $('fPersona').onchange=syncScopeFields;
-$('btnResetPwd').onclick=()=>alert('Prototype: a password-reset email would be sent to this user.');
-$('btnReset2fa').onclick=()=>alert('Prototype: the authenticator would be unlinked and the user prompted to re-enroll, with fresh recovery codes.');
 document.addEventListener('click', e=>{
-  const ed=e.target.closest('[data-edit]'); if(ed){ openDrawer(+ed.getAttribute('data-edit')); return; }
-  const dl=e.target.closest('[data-del]'); if(dl){ pendingDelete=+dl.getAttribute('data-del'); $('confirm').classList.add('open'); }
+  const ed=e.target.closest('[data-edit]'); if(ed){ openDrawer(+ed.getAttribute('data-edit')); }
 });
+function setStatus(i,s){ if(i!==null){ data[i].status=s; render(); } }
+// Delete (hard, irreversible; type the email to confirm)
+function openDelete(i){ pendingDelete=i; var inp=$('delEmail'); inp.value=''; inp.placeholder=data[i].email; $('cOk').disabled=true; $('confirm').classList.add('open'); setTimeout(function(){inp.focus();},60); }
+$('delEmail').addEventListener('input',function(){ $('cOk').disabled = pendingDelete===null || this.value.trim().toLowerCase()!==(data[pendingDelete].email||'').toLowerCase(); });
 $('cCancel').onclick=()=>{ $('confirm').classList.remove('open'); pendingDelete=null; };
-$('cOk').onclick=()=>{ if(pendingDelete!==null) data[pendingDelete].status='Suspended'; $('confirm').classList.remove('open'); pendingDelete=null; render(); };
+$('cOk').onclick=()=>{ if(pendingDelete!==null && !$('cOk').disabled){ data.splice(pendingDelete,1); } $('confirm').classList.remove('open'); pendingDelete=null; render(); };
 
 // row actions (kebab) menu
 $('rowMenu').addEventListener('click', e=>e.stopPropagation());
 $('rmEdit').onclick=()=>{ const i=menuRowIdx; closeRowMenu(); openDrawer(i); };
-$('rmPwd').onclick=()=>{ closeRowMenu(); alert('Prototype: a password-reset email would be sent to this user.'); };
-$('rm2fa').onclick=()=>{ closeRowMenu(); alert('Prototype: the authenticator would be unlinked and the user prompted to re-enroll, with fresh recovery codes.'); };
-$('rmReinvite').onclick=()=>{ closeRowMenu(); alert('Prototype: a new invite email would be sent. This also clears any current sign-in lockout.'); };
-$('rmReactivate').onclick=()=>{ const i=menuRowIdx; closeRowMenu(); if(i!==null){ data[i].status='Active'; render(); } };
-$('rmDeactivate').onclick=()=>{ pendingDelete=menuRowIdx; closeRowMenu(); $('confirm').classList.add('open'); };
+$('rmResend').onclick=()=>{ closeRowMenu(); alert('Prototype: the invite email would be re-sent to this user.'); };
+$('rmReinvite').onclick=()=>{ const i=menuRowIdx; closeRowMenu(); reinvIdx=i; $('reinvDate').textContent=fmtDate(data[i].pwd); $('reinviteModal').classList.add('open'); };
+$('rm2fa').onclick=()=>{ const i=menuRowIdx; closeRowMenu(); r2faIdx=i; $('r2faDate').textContent=fmtDate(data[i].pwd); $('reset2faModal').classList.add('open'); };
+$('rmEnable').onclick=()=>{ const i=menuRowIdx; closeRowMenu(); setStatus(i,'Active'); };
+$('rmDisable').onclick=()=>{ const i=menuRowIdx; closeRowMenu(); setStatus(i,'Disabled'); };
+$('rmDelete').onclick=()=>{ const i=menuRowIdx; closeRowMenu(); openDelete(i); };
+$('r2faCancel').onclick=()=>{ $('reset2faModal').classList.remove('open'); r2faIdx=null; };
+$('r2faOk').onclick=()=>{ $('reset2faModal').classList.remove('open'); r2faIdx=null; alert('Prototype: the authenticator is unlinked; the user must re-enroll and receives fresh recovery codes.'); };
+$('reinvCancel').onclick=()=>{ $('reinviteModal').classList.remove('open'); reinvIdx=null; };
+$('reinvOk').onclick=()=>{ const i=reinvIdx; $('reinviteModal').classList.remove('open'); reinvIdx=null; if(i!==null){ data[i].status='Invited'; data[i].twofa=false; data[i].pwd='Pending'; data[i].locked=''; render(); } };
 window.addEventListener('scroll', closeRowMenu, true);
 window.addEventListener('resize', closeRowMenu);
 
-document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeDrawer(); closeMenus(); $('confirm').classList.remove('open'); } });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeDrawer(); closeMenus(); $('confirm').classList.remove('open'); $('reset2faModal').classList.remove('open'); $('reinviteModal').classList.remove('open'); } });
 
 // Client-facing login screen, shown after Log out (prototype); "Verify and sign in" returns to the app.
 var _lo=document.getElementById('loginOverlay');
