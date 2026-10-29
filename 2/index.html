@@ -653,7 +653,7 @@
       <div class="usermenu">
         <div class="avatar" id="avatarBtn" role="button" tabindex="0" aria-haspopup="true" aria-label="Account menu">AM</div>
         <div class="menu" id="userMenu">
-          <div class="mhead"><div class="mname" id="uName">Dr. Alicia Monroe</div><div class="mrole" id="uRole">APP Director</div>
+          <div class="mhead"><div class="mname" id="uName">Dr. Alicia Monroe</div><div class="mrole" id="uRole">APP Director &middot; GoHealth</div>
             <div id="personaSwitch">
               <select id="impSelect" class="impsel" aria-label="Choose whose dashboard to view">
                 <option value="">My view</option>
@@ -799,7 +799,7 @@ function render(k,keepId){
   if(!keepId){
     document.getElementById('avatarBtn').textContent=p.initials;
     document.getElementById('uName').textContent=p.name;
-    document.getElementById('uRole').textContent=p.role;
+    document.getElementById('uRole').textContent=p.role+' \u00b7 GoHealth';
   }
   document.getElementById('overview').innerHTML=p.ov;
   document.querySelectorAll('.pers').forEach(a=>a.classList.toggle('on',a.dataset.p===k));
