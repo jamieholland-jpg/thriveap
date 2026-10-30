@@ -244,6 +244,18 @@
   .mlogout:hover{background:var(--surface);}
   .mitem{display:block;padding:9px 14px;text-decoration:none;font-weight:600;color:var(--ink);font-size:14px;}
   .mitem:hover{background:var(--surface);}
+  /* client brand lockup in the nav (prototype: placeholder mark + org name, pending real HubSpot logo) */
+  .brandfor{font-size:14px;color:var(--muted);margin:0 8px 0 12px;font-weight:500;}
+  .clientbrand{display:inline-flex;align-items:center;gap:8px;margin-right:6px;}
+  .clientmark{width:24px;height:24px;border-radius:7px;background:var(--blue);color:#fff;font-weight:700;font-size:12px;display:inline-flex;align-items:center;justify-content:center;letter-spacing:.3px;}
+  .clientname{font-family:'Switzer',system-ui,sans-serif;font-weight:600;font-size:17px;color:var(--ink);}
+  .clientlogo{height:30px;width:auto;border-radius:6px;display:block;}
+  /* impersonation banner (prototype): shown when an admin opens this view via "Act as" / "View as" */
+  .imp-banner{display:flex;align-items:center;justify-content:center;gap:16px;background:var(--ink);color:#fff;font-size:13px;line-height:1.4;padding:9px 18px;}
+  .imp-banner b{font-weight:700;}
+  .imp-banner #impMeta{opacity:.8;}
+  .imp-banner .imp-eye{opacity:.9;}
+  .imp-banner a{color:#fff;text-decoration:underline;font-weight:600;white-space:nowrap;}
   /* login / two-step verification (prototype) */
   .login-overlay{position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;padding:24px;background:var(--bg);}
   .login-overlay.show{display:flex;}
@@ -644,6 +656,10 @@
   .b-invited{background:var(--amber-soft);color:#8a5e10;}
   .b-suspended{background:var(--surface-2);color:var(--muted);border:1px solid var(--border);}
   .b-expired{background:var(--red-soft);color:var(--red);}
+  .b-am{background:var(--surface-2);color:var(--teal);border:1px solid var(--teal-line,#c3ddd7);}
+  .segtoggle{display:inline-flex;background:var(--surface-2);border-radius:10px;padding:3px;gap:2px;}
+  .segtoggle .seg{border:none;background:none;font-family:inherit;font-size:13.5px;font-weight:600;color:var(--muted);padding:7px 14px;border-radius:8px;cursor:pointer;}
+  .segtoggle .seg.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(20,15,40,.08);}
   .b-2fa{background:var(--green-soft);color:var(--green);}
   .b-no2fa{background:var(--surface-2);color:var(--muted);border:1px solid var(--border);}
   .b-locked{background:var(--amber-soft);color:#8a5e10;display:inline-flex;align-items:center;}
@@ -675,6 +691,13 @@
   .fld label{display:block;font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:6px;}
   .frow{display:flex;gap:12px;}
   .frow .fld{flex:1;}
+  .sitewrap{display:block;}
+  .sitebtn{width:100%;justify-content:space-between;padding:10px 12px;font-weight:500;font-size:14px;}
+  .sitebtn .chev{color:var(--muted);}
+  #siteBtnLabel{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;}
+  .sitemenu{left:0;right:auto;width:100%;top:46px;}
+  .sitemenu input{accent-color:var(--blue);width:15px;height:15px;cursor:pointer;}
+  .sitehint{font-size:12px;color:var(--muted);margin-top:8px;}
   .dsec{margin-top:6px;padding-top:16px;border-top:1px solid var(--border);}
   .dsec h3{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:0 0 10px;}
   .roline{display:flex;align-items:center;justify-content:space-between;padding:7px 0;font-size:13px;}
@@ -717,7 +740,7 @@
       <div class="usermenu">
         <div class="avatar" id="avatarBtn" role="button" tabindex="0" aria-haspopup="true" aria-label="Account menu">BG</div>
         <div class="menu" id="userMenu">
-          <div class="mhead"><div class="mname">Brandi Gilbert</div><div class="mrole">ThriveAP admin</div></div>
+          <div class="mhead"><div class="mname">Brandi Gilbert</div><div class="mrole">ThriveAP team &middot; Admin</div></div>
           <div class="sep"></div>
           <a href="#" class="mlogout">Log out</a>
         </div>
@@ -728,12 +751,12 @@
   <div class="page">
     <div class="phead">
       <div class="phead-title"><div class="title-row"><h1>User management</h1></div></div>
-      <div class="actions"><button class="btn btn-pri" id="inviteBtn">+ Invite user</button></div>
+      <div class="actions"><button class="btn btn-ghost" id="viewAsBtn">View as&hellip;</button><button class="btn btn-pri" id="inviteBtn">+ Invite user</button></div>
     </div>
 
     <div class="card ptcard">
       <div class="att-head ptbar">
-        <div class="pt-left"><h3>Users</h3><span class="att-badge" id="count">0</span></div>
+        <div class="pt-left"><div class="segtoggle"><button type="button" class="seg on" data-seg="client">Client users</button><button type="button" class="seg" data-seg="thriveap">ThriveAP team</button></div><span class="att-badge" id="count">0</span></div>
         <div class="pt-right">
           <div class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg><input type="text" id="search" placeholder="Search users" aria-label="Search users"></div>
           <div class="filterwrap"><button class="filterbtn" id="orgBtn"><span id="orgBtnLabel">All clients</span> <span class="chev">&#9662;</span></button>
@@ -742,7 +765,7 @@
               <div class="orglist" id="orgList"></div>
             </div></div>
           <div class="filterwrap"><button class="filterbtn" id="filterBtn">Filter <span class="chev">&#9662;</span></button>
-            <div class="filtermenu" id="filterMenu"><div class="fm-sec">Persona</div><label><input type="checkbox" data-f="persona" value="Director"> Director</label><label><input type="checkbox" data-f="persona" value="Manager"> Manager</label><label><input type="checkbox" data-f="persona" value="Executive"> Executive</label><label><input type="checkbox" data-f="persona" value="Administrator"> Administrator</label><label><input type="checkbox" data-f="persona" value="ThriveAP admin"> ThriveAP admin</label><div class="fm-sec">Status</div><label><input type="checkbox" data-f="status" value="Active"> Active</label><label><input type="checkbox" data-f="status" value="Invited"> Invited</label><label><input type="checkbox" data-f="status" value="Disabled"> Disabled</label><label><input type="checkbox" data-f="status" value="Expired"> Expired</label><div class="fm-foot"><button type="button" class="fm-reset" id="fmReset">Clear all</button></div></div></div>
+            <div class="filtermenu" id="filterMenu"><div class="fm-grp fm-client"><div class="fm-sec">Persona</div><label><input type="checkbox" data-f="persona" value="Director"> Director</label><label><input type="checkbox" data-f="persona" value="Manager"> Manager</label><label><input type="checkbox" data-f="persona" value="Executive"> Executive</label><label><input type="checkbox" data-f="persona" value="Program Administrator"> Program Administrator</label></div><div class="fm-grp fm-tap" style="display:none"><div class="fm-sec">Role</div><label><input type="checkbox" data-f="persona" value="Admin"> Admin</label><label><input type="checkbox" data-f="persona" value="Account Manager"> Account Manager</label></div><div class="fm-sec">Status</div><label><input type="checkbox" data-f="status" value="Active"> Active</label><label><input type="checkbox" data-f="status" value="Invited"> Invited</label><label><input type="checkbox" data-f="status" value="Disabled"> Disabled</label><label><input type="checkbox" data-f="status" value="Expired"> Expired</label><div class="fm-foot"><button type="button" class="fm-reset" id="fmReset">Clear all</button></div></div></div>
         </div>
       </div>
       <div class="pt-scrollwrap"><div class="ptwrap">
@@ -769,9 +792,23 @@
     <div class="dbody">
       <div class="frow"><div class="fld"><label>First name</label><input class="finp" id="fFirst"></div><div class="fld"><label>Last name</label><input class="finp" id="fLast"></div></div>
       <div class="fld"><label>Email</label><input class="finp" id="fEmail" type="email" placeholder="name@client.org"></div>
-      <div class="fld"><label>Persona</label><select class="fsel" id="fPersona"><option>Director</option><option>Manager</option><option>Executive</option><option>Administrator</option><option>ThriveAP admin</option></select></div>
-      <div class="fld" id="orgFld"><label>Client</label><select class="fsel" id="fOrg"><option>Cumberland Health System</option><option>GoHealth</option><option>Riverside Medical Group</option></select></div>
-      <div class="fld" id="siteFld"><label>Site</label><select class="fsel" id="fSite"><option>All sites</option><option>Main Campus</option><option>North Clinic</option><option>Riverside Center</option><option>West Tower</option></select></div>
+      <div class="fld"><label>Account type</label><select class="fsel" id="fAcct"><option value="client">Client user</option><option value="thriveap">ThriveAP team</option></select></div>
+      <div class="fld" id="personaFld"><label>Persona</label><select class="fsel" id="fPersona"><option>Director</option><option>Manager</option><option>Executive</option><option>Program Administrator</option></select></div>
+      <div class="fld" id="roleFld"><label>Role</label><select class="fsel" id="fRole"><option>Admin</option><option>Account Manager</option></select></div>
+      <div class="fld" id="orgFld"><label>Client</label>
+        <div class="filterwrap">
+          <button type="button" class="filterbtn sitebtn" id="fOrgBtn"><span id="fOrgLabel">Select a client</span> <span class="chev">&#9662;</span></button>
+          <div class="filtermenu sitemenu" id="fOrgMenu">
+            <div class="orgsearch"><input type="text" id="fOrgSearch" placeholder="Search clients" aria-label="Search clients"></div>
+            <div class="orglist" id="fOrgList"></div>
+          </div>
+        </div></div>
+      <div class="fld" id="siteFld"><label>Sites</label>
+        <div class="filterwrap sitewrap">
+          <button type="button" class="filterbtn sitebtn" id="siteBtn"><span id="siteBtnLabel">Select sites</span> <span class="chev">&#9662;</span></button>
+          <div class="filtermenu sitemenu" id="siteMenu"><label><input type="checkbox" class="fSiteChk" value="Shadyside"> Shadyside</label><label><input type="checkbox" class="fSiteChk" value="Altoona"> Altoona</label><label><input type="checkbox" class="fSiteChk" value="CMI Erie"> CMI Erie</label><label><input type="checkbox" class="fSiteChk" value="Pinnacle"> Pinnacle</label><label><input type="checkbox" class="fSiteChk" value="Main Campus"> Main Campus</label><label><input type="checkbox" class="fSiteChk" value="North Clinic"> North Clinic</label><label><input type="checkbox" class="fSiteChk" value="Riverside Center"> Riverside Center</label><label><input type="checkbox" class="fSiteChk" value="West Tower"> West Tower</label></div>
+        </div>
+        <div class="sitehint">Managers can cover more than one site. The list comes from the client's HubSpot record.</div></div>
       <div class="fld" id="statusFld"><label>Status</label><div id="fStatusRO" style="padding-top:2px"></div></div>
       <div class="fld"><label>Access expires</label><input class="finp" id="fExpire" type="date"></div>
       <div class="dsec" id="securitySec">
@@ -795,9 +832,25 @@
   <div class="modal" id="reinviteModal">
     <div class="mbox"><h3>Re-invite this user?</h3><p>This signs them out everywhere, removes their password and authenticator, and emails a new invite.</p><div class="roline"><span class="rol-l">Password last changed</span><span class="rol-v" id="reinvDate">&mdash;</span></div><p class="prov-note" style="margin-top:12px">Confirm it's really the user through a channel other than email before continuing.</p><div class="mbtns"><button class="btn btn-ghost" id="reinvCancel">Cancel</button><button class="btn btn-pri" id="reinvOk">Re-invite</button></div></div>
   </div>
+  <div class="modal" id="viewAsModal">
+    <div class="mbox"><h3>View as a persona</h3><p>Open a client's dashboard as a chosen persona, even if no user exists in that persona yet. You'll see exactly what they see, with a banner to exit back here.</p>
+      <div class="fld"><label>Client</label>
+        <div class="filterwrap">
+          <button type="button" class="filterbtn sitebtn" id="vaClientBtn"><span id="vaClientLabel">Select a client</span> <span class="chev">&#9662;</span></button>
+          <div class="filtermenu sitemenu" id="vaClientMenu">
+            <div class="orgsearch"><input type="text" id="vaClientSearch" placeholder="Search clients" aria-label="Search clients"></div>
+            <div class="orglist" id="vaClientList"></div>
+          </div>
+        </div></div>
+      <div class="fld"><label>Persona</label><select class="fsel" id="vaPersona"><option>Director</option><option>Manager</option><option>Executive</option><option>Program Administrator</option></select></div>
+      <div class="mbtns"><button class="btn btn-ghost" id="vaCancel">Cancel</button><button class="btn btn-pri" id="vaOk">Open view</button></div></div>
+  </div>
 
   <div class="rowmenu" id="rowMenu" role="menu">
+    <button id="rmImpersonate" role="menuitem">Act as this user</button>
+    <div class="rm-sep" id="rmImpSep"></div>
     <button id="rmEdit" role="menuitem">Edit user</button>
+    <button id="rmUnlock" role="menuitem">Unlock</button>
     <button id="rmResend" role="menuitem">Resend invite</button>
     <button id="rmReinvite" role="menuitem">Re-invite</button>
     <button id="rm2fa" role="menuitem">Reset authenticator</button>
@@ -823,7 +876,7 @@
       </div>
       <div class="login-step" id="loginCode" style="display:none">
         <h2 class="login-h">Two-step verification</h2>
-        <p class="login-sub">Open your Microsoft Authenticator app and enter the 6-digit code for ThriveIQ.</p>
+        <p class="login-sub">Open your authenticator app and enter the 6-digit code for ThriveIQ.</p>
         <label class="login-label" for="loginCodeInput">Authenticator code</label>
         <input class="login-input login-code-input" id="loginCodeInput" type="text" inputmode="numeric" maxlength="6" placeholder="------">
         <button class="login-btn" id="loginCodeBtn" disabled>Verify and sign in</button>
@@ -835,9 +888,24 @@
   </div>
 
 <script>
-const USERS = [{"first": "Alicia", "last": "Monroe", "email": "alicia.monroe@gohealth.org", "persona": "Director", "org": "GoHealth", "site": "All sites", "status": "Active", "expire": "2027-06-30", "login": "2026-10-28", "pwd": "2026-09-02", "twofa": true}, {"first": "Marcus", "last": "Reed", "email": "marcus.reed@gohealth.org", "persona": "Manager", "org": "GoHealth", "site": "North Clinic", "status": "Active", "expire": "", "login": "2026-10-27", "pwd": "2026-08-15", "twofa": true, "locked": "Oct 29, 3:40 PM"}, {"first": "Diane", "last": "Okafor", "email": "diane.okafor@gohealth.org", "persona": "Executive", "org": "GoHealth", "site": "All sites", "status": "Active", "expire": "", "login": "2026-10-20", "pwd": "2026-07-30", "twofa": true}, {"first": "Jordan", "last": "Ellis", "email": "jordan.ellis@gohealth.org", "persona": "Administrator", "org": "GoHealth", "site": "All sites", "status": "Invited", "expire": "2026-12-31", "login": "Never", "pwd": "Pending", "twofa": false}, {"first": "Priya", "last": "Anand", "email": "priya.anand@cumberland.org", "persona": "Manager", "org": "Cumberland Health System", "site": "West Tower", "status": "Active", "expire": "", "login": "2026-10-25", "pwd": "2026-09-19", "twofa": true, "locked": "Oct 30, 9:15 AM"}, {"first": "Tom", "last": "Becker", "email": "tom.becker@cumberland.org", "persona": "Director", "org": "Cumberland Health System", "site": "All sites", "status": "Disabled", "expire": "", "login": "2026-09-10", "pwd": "2026-06-01", "twofa": true}, {"first": "Dana", "last": "Whitfield", "email": "dana.whitfield@riverside.org", "persona": "Manager", "org": "Riverside Medical Group", "site": "Main Campus", "status": "Invited", "expire": "2026-11-30", "login": "Never", "pwd": "Pending", "twofa": false}, {"first": "Ben", "last": "Ortiz", "email": "ben.ortiz@riverside.org", "persona": "Executive", "org": "Riverside Medical Group", "site": "All sites", "status": "Active", "expire": "2026-10-01", "login": "2026-09-28", "pwd": "2026-05-12", "twofa": true}, {"first": "Veronica", "last": "", "email": "veronica@thriveap.com", "persona": "ThriveAP admin", "org": "All clients", "site": "", "status": "Active", "expire": "", "login": "2026-10-28", "pwd": "2026-10-01", "twofa": true}];
+const USERS = [{"acct": "client", "first": "Alicia", "last": "Monroe", "email": "alicia.monroe@upmc.edu", "persona": "Director", "org": "UPMC", "site": "All sites", "status": "Active", "expire": "2027-06-30", "login": "2026-10-28", "pwd": "2026-09-02", "twofa": true}, {"acct": "client", "first": "Marcus", "last": "Reed", "email": "marcus.reed@upmc.edu", "persona": "Manager", "org": "UPMC", "site": "Shadyside, Altoona", "status": "Active", "expire": "", "login": "2026-10-27", "pwd": "2026-08-15", "twofa": true, "locked": "Oct 29, 3:40 PM"}, {"acct": "client", "first": "Diane", "last": "Okafor", "email": "diane.okafor@upmc.edu", "persona": "Executive", "org": "UPMC", "site": "All sites", "status": "Active", "expire": "", "login": "2026-10-20", "pwd": "2026-07-30", "twofa": true}, {"acct": "client", "first": "Jordan", "last": "Ellis", "email": "jordan.ellis@upmc.edu", "persona": "Program Administrator", "org": "UPMC", "site": "All sites", "status": "Invited", "expire": "2026-12-31", "login": "Never", "pwd": "Pending", "twofa": false}, {"acct": "client", "first": "Priya", "last": "Anand", "email": "priya.anand@cumberland.org", "persona": "Manager", "org": "Cumberland Health System", "site": "West Tower", "status": "Active", "expire": "", "login": "2026-10-25", "pwd": "2026-09-19", "twofa": true, "locked": "Oct 30, 9:15 AM"}, {"acct": "client", "first": "Tom", "last": "Becker", "email": "tom.becker@cumberland.org", "persona": "Director", "org": "Cumberland Health System", "site": "All sites", "status": "Disabled", "expire": "", "login": "2026-09-10", "pwd": "2026-06-01", "twofa": true}, {"acct": "client", "first": "Dana", "last": "Whitfield", "email": "dana.whitfield@riverside.org", "persona": "Manager", "org": "Riverside Medical Group", "site": "Main Campus", "status": "Invited", "expire": "2026-11-30", "login": "Never", "pwd": "Pending", "twofa": false}, {"acct": "client", "first": "Ben", "last": "Ortiz", "email": "ben.ortiz@riverside.org", "persona": "Executive", "org": "Riverside Medical Group", "site": "All sites", "status": "Active", "expire": "2026-10-01", "login": "2026-09-28", "pwd": "2026-05-12", "twofa": true}, {"acct": "thriveap", "first": "Veronica", "last": "Keene", "email": "veronica.keene@thriveap.com", "persona": "Admin", "org": "All clients", "site": "", "status": "Active", "expire": "", "login": "2026-10-28", "pwd": "2026-10-01", "twofa": true}, {"acct": "thriveap", "first": "Brandi", "last": "Gilbert", "email": "brandi.gilbert@thriveap.com", "persona": "Admin", "org": "All clients", "site": "", "status": "Active", "expire": "", "login": "2026-10-29", "pwd": "2026-09-11", "twofa": true}, {"acct": "thriveap", "first": "Nicole", "last": "Alvarez", "email": "nicole.alvarez@thriveap.com", "persona": "Admin", "org": "All clients", "site": "", "status": "Active", "expire": "", "login": "2026-10-22", "pwd": "2026-08-03", "twofa": true}, {"acct": "thriveap", "first": "Corey", "last": "Dunn", "email": "corey.dunn@thriveap.com", "persona": "Account Manager", "org": "All clients", "site": "", "status": "Active", "expire": "", "login": "2026-10-26", "pwd": "2026-07-18", "twofa": true}, {"acct": "thriveap", "first": "Sabrina", "last": "Lane", "email": "sabrina.lane@thriveap.com", "persona": "Account Manager", "org": "All clients", "site": "", "status": "Invited", "expire": "2027-03-31", "login": "Never", "pwd": "Pending", "twofa": false}];
 let data = USERS.map(u => Object.assign({}, u));
 let editIdx=null, pendingDelete=null, sortCol=0, sortDir=1, menuRowIdx=null, selectedOrg='', reinvIdx=null, r2faIdx=null;
+const SELF_EMAIL='brandi.gilbert@thriveap.com';  // the signed-in ThriveAP admin (can't disable/delete self)
+let SEG='client';  // which list is shown: 'client' | 'thriveap'
+function syncSeg(){
+  document.querySelectorAll('.seg').forEach(b=>b.classList.toggle('on', b.dataset.seg===SEG));
+  const ow=$('orgBtn'); if(ow){ const fw=ow.closest('.filterwrap'); if(fw) fw.style.display = (SEG==='client')?'':'none'; }
+  const fc=document.querySelector('.fm-client'), ft=document.querySelector('.fm-tap');
+  if(fc) fc.style.display=(SEG==='client')?'':'none';
+  if(ft) ft.style.display=(SEG==='thriveap')?'':'none';
+}
+document.querySelectorAll('.seg').forEach(b=>b.addEventListener('click', ()=>{
+  SEG=b.dataset.seg;
+  // clear persona/role filter checks so a stale cross-segment filter doesn't blank the list
+  document.querySelectorAll('input[data-f="persona"]').forEach(cb=>cb.checked=false);
+  syncSeg(); render();
+}));
 const $ = id => document.getElementById(id);
 const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 function fmtDate(v){ if(!v||v==='Never'||v==='Pending') return v||''; const p=v.split('-'); return p.length===3 ? p[1]+'/'+p[2]+'/'+p[0].slice(2) : v; }
@@ -849,15 +917,18 @@ function effectiveStatus(u){ return (u.status==='Active' && u.expire && u.expire
 const ab=$('avatarBtn'), um=$('userMenu'), fbtn=$('filterBtn'), fmenu=$('filterMenu');
 function closeRowMenu(){ const rm=$('rowMenu'); if(rm) rm.classList.remove('open'); menuRowIdx=null; }
 function openRowMenu(idx, btn){
-  menuRowIdx=idx; const rm=$('rowMenu'); var u=data[idx]; var st=effectiveStatus(u); var isAdmin=u.persona==='ThriveAP admin';
+  menuRowIdx=idx; const rm=$('rowMenu'); var u=data[idx]; var st=effectiveStatus(u); var isSelf=u.email===SELF_EMAIL; var isClient=(u.acct||'client')==='client';
   function sh(id,c){var e=$(id); if(e)e.style.display=c?'block':'none';}
-  sh('rmResend', !isAdmin && st==='Invited');
-  sh('rmReinvite', !isAdmin && st==='Active');
-  sh('rm2fa', st==='Active');
-  sh('rmEnable', !isAdmin && st==='Disabled');
-  sh('rmDisable', !isAdmin && st==='Active');
-  sh('rmDelete', !isAdmin);
-  sh('rmSep', !isAdmin);
+  sh('rmImpersonate', isClient);
+  sh('rmImpSep', isClient);
+  sh('rmUnlock', !!u.locked && !isSelf);
+  sh('rmResend', !isSelf && st==='Invited');
+  sh('rmReinvite', !isSelf && st==='Active');
+  sh('rm2fa', !isSelf && st==='Active');
+  sh('rmEnable', !isSelf && st==='Disabled');
+  sh('rmDisable', !isSelf && st==='Active');
+  sh('rmDelete', !isSelf);
+  sh('rmSep', !isSelf);
   rm.classList.add('open');
   const r=btn.getBoundingClientRect(); let left=r.right-rm.offsetWidth; if(left<8)left=8;
   let top=r.bottom+4; if(top+rm.offsetHeight>window.innerHeight-8) top=r.top-rm.offsetHeight-4;
@@ -895,16 +966,36 @@ orgBtn.addEventListener('click', e=>{ e.stopPropagation(); const o=orgMenu.class
 orgMenu.addEventListener('click', e=>e.stopPropagation());
 orgSearch.addEventListener('input', renderOrgList);
 
-function personaBadge(p){ return '<span class="badge '+(p==='ThriveAP admin'?'b-super':'b-persona')+'">'+p+'</span>'; }
+// reusable searchable single-select client picker (drawer + view-as modal), scales to 200+ clients
+function setupClientPicker(ids){
+  const btn=$(ids.btn), menu=$(ids.menu), search=$(ids.search), list=$(ids.list), label=$(ids.label);
+  let val='';
+  function draw(){ const q=search.value.trim().toLowerCase(); const found=ORG_LIST.filter(o=>o.toLowerCase().indexOf(q)>-1);
+    let html=found.map(o=>'<button type="button" class="orgitem'+(val===o?' on':'')+'" data-org="'+esc(o)+'">'+esc(o)+'</button>').join('');
+    if(!found.length) html='<div class="orgempty">No clients found</div>'; list.innerHTML=html;
+    list.querySelectorAll('.orgitem').forEach(b=>b.addEventListener('click', e=>{ e.stopPropagation(); set(b.getAttribute('data-org')); menu.classList.remove('open'); })); }
+  function set(v){ val=v||''; label.textContent=val||'Select a client'; label.style.color=val?'var(--ink)':'var(--muted)'; }
+  btn.addEventListener('click', e=>{ e.stopPropagation(); const o=menu.classList.contains('open');
+    if(!o){ menu.classList.add('open'); search.value=''; draw(); setTimeout(()=>search.focus(),0); } else menu.classList.remove('open'); });
+  menu.addEventListener('click', e=>e.stopPropagation());
+  search.addEventListener('input', draw);
+  document.addEventListener('click', ()=>menu.classList.remove('open'));
+  return { get:()=>val, set:set };
+}
+const drawerOrgPicker=setupClientPicker({btn:'fOrgBtn',label:'fOrgLabel',menu:'fOrgMenu',search:'fOrgSearch',list:'fOrgList'});
+const vaOrgPicker=setupClientPicker({btn:'vaClientBtn',label:'vaClientLabel',menu:'vaClientMenu',search:'vaClientSearch',list:'vaClientList'});
+
+function personaBadge(u){ var tap=(u.acct||'client')==='thriveap'; var cls = tap ? (u.persona==='Account Manager'?'b-am':'b-super') : 'b-persona'; return '<span class="badge '+cls+'">'+esc(u.persona)+'</span>'; }
 function statusBadge(s){ const m={Active:'b-active',Invited:'b-invited',Disabled:'b-suspended',Expired:'b-expired'}; return '<span class="badge '+(m[s]||'b-suspended')+'">'+s+'</span>'; }
 function twofaBadge(t){ return t ? '<span class="badge b-2fa">Enrolled</span>' : '<span class="badge b-no2fa">Not set</span>'; }
 function lockedCell(u){ return u.locked ? '<span class="badge b-locked" title="Locked until '+esc(u.locked)+'. Temporary lockout from repeated failed sign-ins; clears on its own, or via Reset authenticator or Re-invite."><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Locked</span>' : '<span class="mut">&mdash;</span>'; }
-function scopeCell(u){ if(u.persona==='ThriveAP admin') return '<span class="mut">All clients</span>';
+function scopeCell(u){ if((u.acct||'client')==='thriveap') return '<span class="mut">All clients</span>';
   const sub=(u.persona==='Manager')?u.site:'Org-wide'; return '<div>'+esc(u.org)+'</div><div class="psub">'+esc(sub)+'</div>'; }
 function dash(v){ return v ? esc(v) : '<span class="mut">&mdash;</span>'; }
 
 function matches(u){
-  if(selectedOrg && u.org!==selectedOrg) return false;
+  if((u.acct||'client')!==SEG) return false;
+  if(SEG==='client' && selectedOrg && u.org!==selectedOrg) return false;
   const q=$('search').value.trim().toLowerCase();
   if(q){ const hay=((u.first||'')+' '+(u.last||'')+' '+(u.email||'')).toLowerCase(); if(hay.indexOf(q)<0) return false; }
   const fsel={};
@@ -915,7 +1006,7 @@ function matches(u){
 function sortVal(u,c){ switch(c){
   case 0: return ((u.last||'')+(u.first||'')).toLowerCase();
   case 1: return u.persona||'';
-  case 2: return u.persona==='ThriveAP admin' ? 'All clients' : ((u.org||'')+(u.persona==='Manager'?u.site:''));
+  case 2: return (u.acct||'client')==='thriveap' ? 'All clients' : ((u.org||'')+(u.persona==='Manager'?u.site:''));
   case 3: return effectiveStatus(u)||'';
   case 4: return u.expire||'';
   case 5: return u.login==='Never'?'':u.login;
@@ -934,7 +1025,7 @@ function render(){
     const tr=document.createElement('tr');
     tr.innerHTML =
       '<td class="l" data-edit="'+i+'"><div class="pnm">'+name+'</div><div class="psub">'+esc(u.email)+'</div></td>'+
-      '<td class="tl">'+personaBadge(u.persona)+'</td>'+
+      '<td class="tl">'+personaBadge(u)+'</td>'+
       '<td class="tl">'+scopeCell(u)+'</td>'+
       '<td class="tl">'+statusBadge(effectiveStatus(u))+'</td>'+
       '<td class="tl">'+(u.expire?esc(fmtDate(u.expire)):'<span class="mut">Never</span>')+'</td>'+
@@ -961,19 +1052,34 @@ document.querySelectorAll('#userTable thead th.srt').forEach(th=>{
 $('search').addEventListener('input', render);
 
 // drawer
-function syncScopeFields(){ const p=$('fPersona').value;
-  $('orgFld').style.display=(p==='ThriveAP admin')?'none':'block';
-  $('siteFld').style.display=(p==='Manager')?'block':'none'; }
+function syncScopeFields(){ const isC=$('fAcct').value==='client'; const p=$('fPersona').value;
+  $('personaFld').style.display=isC?'block':'none';
+  $('roleFld').style.display=isC?'none':'block';
+  $('orgFld').style.display=isC?'block':'none';
+  $('siteFld').style.display=(isC && p==='Manager')?'block':'none';
+  $('fEmail').placeholder = isC ? 'name@client.org' : 'name@thriveap.com'; }
+function getSites(){ return Array.from(document.querySelectorAll('.fSiteChk:checked')).map(c=>c.value).join(', '); }
+function setSites(str){ const want=(str||'').split(',').map(s=>s.trim()).filter(Boolean);
+  document.querySelectorAll('.fSiteChk').forEach(c=>{ c.checked = want.indexOf(c.value)>=0; }); updateSiteLabel(); }
+function updateSiteLabel(){ const v=getSites(); const l=$('siteBtnLabel');
+  l.textContent = v || 'Select sites'; l.style.color = v ? 'var(--ink)' : 'var(--muted)'; }
+(function(){ const b=$('siteBtn'), m=$('siteMenu');
+  b.addEventListener('click', e=>{ e.stopPropagation(); m.classList.toggle('open'); });
+  m.addEventListener('click', e=>e.stopPropagation());
+  m.querySelectorAll('.fSiteChk').forEach(cb=>cb.addEventListener('change', updateSiteLabel));
+  document.addEventListener('click', ()=>m.classList.remove('open')); })();
 function openDrawer(idx){
   editIdx=idx; const isNew=idx===null;
-  const u=isNew ? {first:'',last:'',email:'',persona:'Director',org:'',site:'All sites',status:'Invited',expire:'',login:'Never',pwd:'Pending',twofa:false} : data[idx];
+  const u=isNew ? {acct:SEG,first:'',last:'',email:'',persona:(SEG==='thriveap'?'Admin':'Director'),org:'',site:'All sites',status:'Invited',expire:'',login:'Never',pwd:'Pending',twofa:false} : data[idx];
+  const isC=(u.acct||'client')==='client';
   $('dTitle').textContent=isNew?'Invite user':'Edit user';
   $('dSave').textContent=isNew?'Send invite':'Save changes';
   $('fFirst').value=u.first; $('fLast').value=u.last; $('fEmail').value=u.email;
   $('fEmail').readOnly=!isNew; $('fEmail').style.background=isNew?'#fff':'var(--surface-2)';  // email is write-once (API)
-  $('fPersona').value=u.persona; $('fExpire').value=u.expire||'';
-  if(u.org && u.persona!=='ThriveAP admin') $('fOrg').value=u.org;
-  $('fSite').value=u.site||'All sites';
+  $('fAcct').value=u.acct||'client'; $('fExpire').value=u.expire||'';
+  $('fAcct').disabled=!isNew; $('fAcct').style.background=isNew?'#fff':'var(--surface-2)';  // account type is set at invite, not changed in place
+  if(isC){ $('fPersona').value=u.persona; drawerOrgPicker.set(u.org||''); } else { $('fRole').value=u.persona; drawerOrgPicker.set(''); }
+  setSites(u.site);
   syncScopeFields();
   $('statusFld').style.display=isNew?'none':'block';
   if(!isNew) $('fStatusRO').innerHTML=statusBadge(effectiveStatus(u));
@@ -985,19 +1091,19 @@ function openDrawer(idx){
     $('roLocked').innerHTML=u.locked?('Locked until '+esc(u.locked)):'Not locked'; }
   $('scrim').classList.add('open'); $('drawer').classList.add('open');
 }
-function closeDrawer(){ $('scrim').classList.remove('open'); $('drawer').classList.remove('open'); editIdx=null; }
+function closeDrawer(){ $('scrim').classList.remove('open'); $('drawer').classList.remove('open'); $('siteMenu').classList.remove('open'); editIdx=null; }
 function saveDrawer(){
-  const p=$('fPersona').value;
-  const rec={ first:$('fFirst').value.trim(), last:$('fLast').value.trim(), email:$('fEmail').value.trim(),
-    persona:p, org:(p==='ThriveAP admin'?'All clients':$('fOrg').value),
-    site:(p==='Manager'?$('fSite').value:'All sites'), expire:$('fExpire').value };
-  if(editIdx===null){ data.unshift(Object.assign({login:'Never',pwd:'Pending',twofa:false,status:'Invited'}, rec)); }
+  const a=$('fAcct').value; const isC=a==='client'; const p=isC?$('fPersona').value:$('fRole').value;
+  const rec={ acct:a, first:$('fFirst').value.trim(), last:$('fLast').value.trim(), email:$('fEmail').value.trim(),
+    persona:p, org:(isC?drawerOrgPicker.get():'All clients'),
+    site:(isC && p==='Manager'?getSites():'All sites'), expire:$('fExpire').value };
+  if(editIdx===null){ data.unshift(Object.assign({login:'Never',pwd:'Pending',twofa:false,status:'Invited'}, rec)); SEG=a; syncSeg(); }
   else { data[editIdx]=Object.assign({}, data[editIdx], rec); }
   closeDrawer(); render();
 }
 $('inviteBtn').onclick=()=>openDrawer(null);
 $('dClose').onclick=closeDrawer; $('dCancel').onclick=closeDrawer; $('scrim').onclick=closeDrawer;
-$('dSave').onclick=saveDrawer; $('fPersona').onchange=syncScopeFields;
+$('dSave').onclick=saveDrawer; $('fPersona').onchange=syncScopeFields; $('fAcct').onchange=syncScopeFields;
 document.addEventListener('click', e=>{
   const ed=e.target.closest('[data-edit]'); if(ed){ openDrawer(+ed.getAttribute('data-edit')); }
 });
@@ -1011,12 +1117,23 @@ $('cOk').onclick=()=>{ if(pendingDelete!==null && !$('cOk').disabled){ data.spli
 // row actions (kebab) menu
 $('rowMenu').addEventListener('click', e=>e.stopPropagation());
 $('rmEdit').onclick=()=>{ const i=menuRowIdx; closeRowMenu(); openDrawer(i); };
+$('rmUnlock').onclick=()=>{ const i=menuRowIdx; closeRowMenu(); if(i!==null){ data[i].locked=''; render(); } };
 $('rmResend').onclick=()=>{ closeRowMenu(); alert('Prototype: the invite email would be re-sent to this user.'); };
 $('rmReinvite').onclick=()=>{ const i=menuRowIdx; closeRowMenu(); reinvIdx=i; $('reinvDate').textContent=fmtDate(data[i].pwd); $('reinviteModal').classList.add('open'); };
 $('rm2fa').onclick=()=>{ const i=menuRowIdx; closeRowMenu(); r2faIdx=i; $('r2faDate').textContent=fmtDate(data[i].pwd); $('reset2faModal').classList.add('open'); };
 $('rmEnable').onclick=()=>{ const i=menuRowIdx; closeRowMenu(); setStatus(i,'Active'); };
 $('rmDisable').onclick=()=>{ const i=menuRowIdx; closeRowMenu(); setStatus(i,'Disabled'); };
 $('rmDelete').onclick=()=>{ const i=menuRowIdx; closeRowMenu(); openDelete(i); };
+// impersonation: open the client dashboard as the chosen user/persona, with a banner to exit back here
+function mapPersona(p){ return {Director:'director',Manager:'manager',Executive:'exec','Program Administrator':'admin'}[p]||'director'; }
+function goImpersonate(persona, who, client){
+  const q=new URLSearchParams({as:mapPersona(persona), who:who||persona, role:persona, client:client||''});
+  window.location.href='ThriveIQ-Dashboard-v2.html?'+q.toString();
+}
+$('rmImpersonate').onclick=()=>{ const i=menuRowIdx; closeRowMenu(); if(i!=null){ const u=data[i]; goImpersonate(u.persona, ((u.first||'')+' '+(u.last||'')).trim(), u.org); } };
+$('viewAsBtn').onclick=()=>{ vaOrgPicker.set(ORG_LIST[0]||''); $('viewAsModal').classList.add('open'); };
+$('vaCancel').onclick=()=>{ $('viewAsModal').classList.remove('open'); };
+$('vaOk').onclick=()=>{ goImpersonate($('vaPersona').value, $('vaPersona').value, vaOrgPicker.get()); };
 $('r2faCancel').onclick=()=>{ $('reset2faModal').classList.remove('open'); r2faIdx=null; };
 $('r2faOk').onclick=()=>{ $('reset2faModal').classList.remove('open'); r2faIdx=null; alert('Prototype: the authenticator is unlinked; the user must re-enroll and receives fresh recovery codes.'); };
 $('reinvCancel').onclick=()=>{ $('reinviteModal').classList.remove('open'); reinvIdx=null; };
@@ -1024,7 +1141,9 @@ $('reinvOk').onclick=()=>{ const i=reinvIdx; $('reinviteModal').classList.remove
 window.addEventListener('scroll', closeRowMenu, true);
 window.addEventListener('resize', closeRowMenu);
 
-document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeDrawer(); closeMenus(); $('confirm').classList.remove('open'); $('reset2faModal').classList.remove('open'); $('reinviteModal').classList.remove('open'); } });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeDrawer(); closeMenus(); $('confirm').classList.remove('open'); $('reset2faModal').classList.remove('open'); $('reinviteModal').classList.remove('open'); $('viewAsModal').classList.remove('open'); } });
+$('viewAsModal').addEventListener('click', e=>{ if(e.target.id==='viewAsModal') $('viewAsModal').classList.remove('open'); });
+syncSeg();
 
 // Client-facing login screen, shown after Log out (prototype); "Verify and sign in" returns to the app.
 var _lo=document.getElementById('loginOverlay');
