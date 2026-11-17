@@ -758,7 +758,7 @@
 .ovsec .infotip{margin-left:-6px;}
 .kpi .label .infotip.asof{margin-left:6px;top:-1px;text-transform:none;letter-spacing:normal;}
 .infotip::after{white-space:normal;}
-.ovsec h2{font-size:22px;margin:0;}
+.ovsec h2{font-family:'orpheuspro',serif;font-size:34px;font-weight:600;letter-spacing:-0.01em;color:var(--ink);margin:0;}   /* page H1 size (Jamie 11/17) */
 .ovhint{font-size:13px;color:var(--muted);}
 .mt30{margin-top:30px;}
 /* Reports (11/10): template cards open a right-side drawer to set the details, then download the data */
@@ -1880,7 +1880,7 @@ document.addEventListener('mouseover',e=>{ const h=e.target.closest('.cn-hit'); 
 document.addEventListener('mouseout',e=>{ const h=e.target.closest('.cn-hit'); if(!h||(e.relatedTarget&&e.relatedTarget.closest&&e.relatedTarget.closest('.cn-hit'))) return;
   const plot=h.closest('.ytd-plot'); plot.querySelector('.ytd-tip').classList.remove('on'); const b=plot.querySelector('.ytd-band'); if(b) b.classList.remove('on'); const x=plot.querySelector('.cn-x'); if(x) x.classList.remove('on'); });
 function renderOverview(){
-  document.getElementById('pheadTitle').innerHTML=`<h1 class="serif">Good morning, Veronica</h1>`;
+  document.getElementById('pheadTitle').innerHTML='';
   if(!PINS.length&&!renderOverview._seeded){ seedPins(); renderOverview._seeded=true; }
   const pins=PINS.map(p=>{ tile.pg=p.pg; const h=`<div class="pinwrap" data-gopg="${p.pg}" title="Open ${PAGE_NAME[p.pg]||''}">${tile(p.l,p.v,p.u)}</div>`; tile.pg=null; return h; }).join('')
     + Array.from({length:PIN_MAX-PINS.length},()=>`<div class="card pinslot"><span class="pi">${STAR}</span>Star any number on a page to pin it here</div>`).join('');
@@ -1932,7 +1932,10 @@ document.addEventListener('click',e=>{ const b=e.target.closest('[data-tfilt]');
 function pfChips(key,cols){ const f=PF[key]||{}, out=[];
   cols.forEach(c=>{ (f[c[1]]||[]).forEach(id=>{ const o=pfOptions(c).find(o=>o.id===id); if(o) out.push(`<button type="button" class="fchip" data-pfrm="${c[1]}" data-pfid="${escH(id)}" aria-label="Remove ${escH(c[0]+': '+o.l)}">${c[0]===o.l?'':`<i>${c[0]}:</i> `}${o.l}<span aria-hidden="true">&times;</span></button>`); }); });
   return out.length?`<div class="fchips" role="group" aria-label="Applied filters"><span class="fbl">Filtered by</span>${out.join('')}<button type="button" class="fclr" data-pfclear="1">Clear all</button></div>`:''; }
-document.addEventListener('click',e=>{ const b=e.target.closest('[data-pfrm]'); if(!b) return; const f=PF[current]||{}, k=b.dataset.pfrm; f[k]=(f[k]||[]).filter(v=>v!==b.dataset.pfid); refreshPT(); });
+document.addEventListener('click',e=>{
+  // Clear all in the Filtered by bar resets the table's filters (the one inside the Filter menu is handled with the menu)
+  const ca=e.target.closest('.fchips [data-pfclear]'); if(ca){ PF[current]={}; if(current==='program-health'&&progTrack.length){ progTrack=[]; renderPrograms(); } else refreshPT(); return; }
+  const b=e.target.closest('[data-pfrm]'); if(!b) return; const f=PF[current]||{}, k=b.dataset.pfrm; f[k]=(f[k]||[]).filter(v=>v!==b.dataset.pfid); refreshPT(); });
 function renderPillar(key){
   const R=filtered();
   document.getElementById('pheadTitle').innerHTML=`<h1 class="serif">${TITLES[key]}</h1>`;
