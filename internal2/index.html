@@ -1351,7 +1351,7 @@ const PAGE_RANGE={'program-health':null,clients:null,speakers:null,feedback:'lwe
 const ALL_DAYS=730;   // sample history: two years
 const rangeDays=r=>{ if(!r) return ALL_DAYS; const n=Math.round((rangeEnd(r)-rangeStart(r))/864e5)+1; return isWorkWeek(r)?Math.min(5,n):n; };
 // month-end closes (Jim's wish list, 11/10): 'c1' is last month's close, 'c2' the one before, and so on. Picking one shows that month frozen as it was reported
-const isClose=r=>!!r&&r[0]==='c', CLOSES=['c1','c2','c3','c4','c5','c6'];
+const isClose=r=>!!r&&r[0]==='c', CLOSES=Array.from({length:13},(_,i)=>'c'+(i+1));   // capped at 13 months of closes (Brandi 11/17)
 const closeMonth=r=>new Date(TODAY.getFullYear(),TODAY.getMonth()-(+r.slice(1)),1);
 const rangeLbl=r=>!r?'All time':isClose(r)?closeMonth(r).toLocaleString('en-US',{month:'long',year:'numeric'})+' close':isWorkWeek(r)?RANGES[r].replace('week','work week'):RANGES[r];
 // last month's close seeds like Last month, so the two differ only where numbers changed after the close
@@ -2087,7 +2087,7 @@ const clientTabs=()=>`<div class="segtab">${[['list','Clients'],['ae','By accoun
 function brkView(tabs,unit,head,rows,allText){ return `<div class="card ptcard brk"><div class="att-head ptbar" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><div class="pt-left">${tabs}<span class="count-pill"><b>${rows.length}</b> ${unit}</span></div></div>
   <div class="pt-scrollwrap"><div class="ptwrap"><table class="ptable"><thead><tr>${head.map((h,i)=>`<th class="${i&&!allText?'num':''}">${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td class="${i&&!allText?'num':'l'}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div></div>`; }
 document.addEventListener('click',e=>{ const v=e.target.closest('[data-cview]'); if(v){ clientView=v.dataset.cview; refreshPT(); return; }
-  const b=e.target.closest('[data-brk]'); if(!b) return; e.preventDefault(); if(b.dataset.brk==='ae'){ CSC.ae=b.dataset.v; clientView='list'; } else { scope.ac=b.dataset.v; watchView='list'; } afterScope(); });
+  const b=e.target.closest('[data-brk]'); if(!b) return; e.preventDefault(); if(b.dataset.brk==='ae'){ CSC.ae=b.dataset.v; clientView='list'; } else if(b.dataset.brk==='fac'){ scope.faculty=+b.dataset.v; watchView='list'; } else { scope.ac=b.dataset.v; watchView='list'; } afterScope(); });
 function renderClients(){
   document.getElementById('pheadTitle').innerHTML=`<h1 class="serif">Client Success &amp; Health</h1>`;
   const A=clientsIn();
@@ -2443,7 +2443,7 @@ function renderFinance(){
 }
 
 function syncRange(){ const r=PAGE_RANGE[current]; document.getElementById('rangeLabel').textContent=rangeLbl(r);
-  const snapSec=SNAP_PAGES.includes(current)?`<div class="mlabel">Month-end close</div>`+CLOSES.map(k=>`<a href="#" data-prange="${k}" class="${r===k?'on':''}">${rangeLbl(k)}</a>`).join(''):'';
+  const snapSec=SNAP_PAGES.includes(current)?`<div class="mlabel">Month-end close</div><select class="scope-select" data-prsel="1"><option value="">Choose a month</option>${CLOSES.map(k=>`<option value="${k}" ${r===k?'selected':''}>${rangeLbl(k)}</option>`).join('')}</select>`:'';
   document.getElementById('rangeMenu').innerHTML=[['',"All time"]].concat(Object.keys(RANGES).map(k=>[k,rangeLbl(k)])).map(([k,l])=>`<a href="#" data-prange="${k}" class="${(r||'')===k?'on':''}">${l}</a>`).join('')+snapSec;
   syncStamp(); }
 /* ---- router ---- */
@@ -2475,6 +2475,7 @@ function currentTableHTML(){ if(current==='program-health') return programTable(
 
 function afterScope(){ document.getElementById('scopeLabel').textContent=scopeLabel(); buildScopeMenu(); document.getElementById('scopeMenu').classList.remove('open'); search=""; sort={key:null,dir:1}; rerender(); }
 document.addEventListener('change', e=>{
+  if(e.target.dataset&&e.target.dataset.prsel){ if(!e.target.value) return; PAGE_RANGE[current]=e.target.value; document.getElementById('rangeMenu').classList.remove('open'); syncRange(); rerender(); return; }
   if(e.target.dataset&&e.target.dataset.csc){ CSC[e.target.dataset.csc]=e.target.value; afterScope(); return; }
   if(e.target.dataset&&e.target.dataset.crange){ PAGE_RANGE.clients=e.target.value||null; afterScope(); return; }
   if(e.target.dataset&&e.target.dataset.sc){ scope[e.target.dataset.sc]=e.target.value||null; afterScope(); return; }
@@ -3309,10 +3310,15 @@ function watchTable(){
   const title=(watchF.needs&&!watchF.made)?'Needs outreach':(!watchF.needs&&watchF.made)?'Outreach made':'On the Watchlist';
   const fon=watchF.made||!watchF.needs||watchF.risk||watchF.cats.length;
   // one card, two views (Jamie 11/10): the list, or how outreach has worked by reason
-  const tabs=`<div class="segtab wtabs">${[['list',title],['results','Outreach results'],['ac','By coordinator']].map(([k,l])=>`<button class="seg ${watchView===k?'on':''}" data-wview="${k}">${l}</button>`).join('')}</div>`;
+  const tabs=`<div class="segtab wtabs">${[['list',title],['results','Outreach results'],['ac','By coordinator'],['fac','By faculty']].map(([k,l])=>`<button class="seg ${watchView===k?'on':''}" data-wview="${k}">${l}</button>`).join('')}</div>`;
   if(watchView==='ac'){ const inScope=watchInScope();
     return brkView(tabs,'coordinators',['Account coordinator','Needs outreach','Outreach made','Addressed','Clients affected'],ACS.map(n=>{ const W=inScope.filter(w=>ACCOUNTS[w.rec.o]&&ACCOUNTS[w.rec.o].ac===n), nd=W.filter(w=>w.status==='none'), md=W.filter(w=>w.status==='made');
       return [`<a href="#" class="brk-n" data-brk="ac" data-v="${escH(n)}">${n}</a>`,nd.length,md.length,(W.length?Math.round(md.length/W.length*100):0)+'<span class="u">%</span>',new Set(nd.map(w=>w.rec.o)).size]; })); }
+  // faculty reach out on education (assessments, content); coordinators on progress (Brandi 11/17)
+  if(watchView==='fac'){ const inScope=watchInScope(), FAC=[...new Set(COHORT_FAC_ALL.flat())];
+    const rows=FAC.map(id=>{ const W=inScope.filter(w=>COHORT_FAC_ALL[w.rec.p].includes(id)), nd=W.filter(w=>w.status==='none'), md=W.filter(w=>w.status==='made'); return {id,n:facName(id),W,nd,md}; })
+      .filter(r=>r.W.length).sort((a,b)=>b.nd.length-a.nd.length||a.n.localeCompare(b.n));
+    return brkView(tabs,'faculty',['Faculty','Needs outreach','Outreach made','Addressed','Programs affected'],rows.map(r=>[`<a href="#" class="brk-n" data-brk="fac" data-v="${r.id}">${r.n}</a>`,r.nd.length,r.md.length,(r.W.length?Math.round(r.md.length/r.W.length*100):0)+'<span class="u">%</span>',new Set(r.nd.map(w=>w.rec.p)).size])); }
   if(watchView==='results') return `<div class="card ptcard">
     <div class="att-head ptbar" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
       <div class="pt-left">${tabs}<span class="count-pill">Last 90 days</span></div></div>
