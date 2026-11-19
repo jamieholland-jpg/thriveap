@@ -832,8 +832,9 @@
   <div class="modal" id="reinviteModal">
     <div class="mbox"><h3>Re-invite this user?</h3><p>This signs them out everywhere, removes their password and authenticator, and emails a new invite.</p><div class="roline"><span class="rol-l">Password last changed</span><span class="rol-v" id="reinvDate">&mdash;</span></div><p class="prov-note" style="margin-top:12px">Confirm it's really the user through a channel other than email before continuing.</p><div class="mbtns"><button class="btn btn-ghost" id="reinvCancel">Cancel</button><button class="btn btn-pri" id="reinvOk">Re-invite</button></div></div>
   </div>
-  <div class="modal" id="viewAsModal">
-    <div class="mbox"><h3>View as a persona</h3><p>Open a client's dashboard as a chosen persona, even if no user exists in that persona yet. You'll see exactly what they see, with a banner to exit back here.</p>
+  <div class="drawer" id="viewAsDrawer" role="dialog" aria-modal="true">
+    <div class="dhd"><h2>View as a persona</h2><button class="dclose" id="vaClose" aria-label="Close">&times;</button></div>
+    <div class="dbody"><p class="prov-note" style="margin:0 0 18px">Open a client's dashboard as a chosen persona, even if no user exists in that persona yet. You'll see exactly what they see, with a banner to exit back here.</p>
       <div class="fld"><label>Client</label>
         <div class="filterwrap">
           <button type="button" class="filterbtn sitebtn" id="vaClientBtn"><span id="vaClientLabel">Select a client</span> <span class="chev">&#9662;</span></button>
@@ -843,7 +844,10 @@
           </div>
         </div></div>
       <div class="fld"><label>Persona</label><select class="fsel" id="vaPersona"><option>Director</option><option>Manager</option><option>Executive</option><option>Program Administrator</option></select></div>
-      <div class="mbtns"><button class="btn btn-ghost" id="vaCancel">Cancel</button><button class="btn btn-pri" id="vaOk">Open view</button></div></div>
+      <div class="fld" id="vaSiteFld" style="display:none"><label>Site <span style="font-weight:400;color:var(--muted,#8a8a97)">&middot; a Manager view is scoped to a site; pick one or more</span></label>
+        <div id="vaSiteList" style="display:flex;flex-wrap:wrap;gap:8px;"></div></div>
+    </div>
+    <div class="dft"><button class="btn btn-ghost" id="vaCancel" type="button">Cancel</button><button class="btn btn-pri" id="vaOk" type="button">Open view</button></div>
   </div>
 
   <div class="rowmenu" id="rowMenu" role="menu">
@@ -974,7 +978,7 @@ function setupClientPicker(ids){
     let html=found.map(o=>'<button type="button" class="orgitem'+(val===o?' on':'')+'" data-org="'+esc(o)+'">'+esc(o)+'</button>').join('');
     if(!found.length) html='<div class="orgempty">No clients found</div>'; list.innerHTML=html;
     list.querySelectorAll('.orgitem').forEach(b=>b.addEventListener('click', e=>{ e.stopPropagation(); set(b.getAttribute('data-org')); menu.classList.remove('open'); })); }
-  function set(v){ val=v||''; label.textContent=val||'Select a client'; label.style.color=val?'var(--ink)':'var(--muted)'; }
+  function set(v){ val=v||''; label.textContent=val||'Select a client'; label.style.color=val?'var(--ink)':'var(--muted)'; if(ids.onChange)ids.onChange(val); }
   btn.addEventListener('click', e=>{ e.stopPropagation(); const o=menu.classList.contains('open');
     if(!o){ menu.classList.add('open'); search.value=''; draw(); setTimeout(()=>search.focus(),0); } else menu.classList.remove('open'); });
   menu.addEventListener('click', e=>e.stopPropagation());
@@ -983,7 +987,25 @@ function setupClientPicker(ids){
   return { get:()=>val, set:set };
 }
 const drawerOrgPicker=setupClientPicker({btn:'fOrgBtn',label:'fOrgLabel',menu:'fOrgMenu',search:'fOrgSearch',list:'fOrgList'});
-const vaOrgPicker=setupClientPicker({btn:'vaClientBtn',label:'vaClientLabel',menu:'vaClientMenu',search:'vaClientSearch',list:'vaClientList'});
+// Sites per client for the "View as" Manager preview. UPMC's four are the locked pilot sites;
+// other clients derive from the user rows, falling back to a single campus.
+const ORG_SITES={ 'UPMC':['Altoona','CMI','Erie','Main Campus'] };
+function sitesForOrg(org){
+  if(ORG_SITES[org]) return ORG_SITES[org].slice();
+  var s=Array.from(new Set(USERS.filter(u=>u.org===org).map(u=>u.site).filter(x=>x && x!=='All sites')));
+  return s.length?s:['Main Campus'];
+}
+function renderVaSites(org){
+  var list=$('vaSiteList'); if(!list) return;
+  var sites=sitesForOrg(org);
+  list.innerHTML=sites.map(function(s,idx){
+    return '<label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;border:1px solid #d9d9e0;border-radius:8px;padding:6px 10px;cursor:pointer;background:#fff;">'+
+      '<input type="checkbox" class="va-site" value="'+esc(s)+'"'+(idx===0?' checked':'')+' style="margin:0;"> '+esc(s)+'</label>';
+  }).join('');
+}
+function toggleVaSite(){ var f=$('vaSiteFld'); if(f) f.style.display=($('vaPersona').value==='Manager')?'':'none'; }
+const vaOrgPicker=setupClientPicker({btn:'vaClientBtn',label:'vaClientLabel',menu:'vaClientMenu',search:'vaClientSearch',list:'vaClientList',onChange:renderVaSites});
+var _vp=$('vaPersona'); if(_vp) _vp.addEventListener('change', toggleVaSite);
 
 function personaBadge(u){ var tap=(u.acct||'client')==='thriveap'; var cls = tap ? (u.persona==='Account Manager'?'b-am':'b-super') : 'b-persona'; return '<span class="badge '+cls+'">'+esc(u.persona)+'</span>'; }
 function statusBadge(s){ const m={Active:'b-active',Invited:'b-invited',Disabled:'b-suspended',Expired:'b-expired'}; return '<span class="badge '+(m[s]||'b-suspended')+'">'+s+'</span>'; }
@@ -1091,7 +1113,7 @@ function openDrawer(idx){
     $('roLocked').innerHTML=u.locked?('Locked until '+esc(u.locked)):'Not locked'; }
   $('scrim').classList.add('open'); $('drawer').classList.add('open');
 }
-function closeDrawer(){ $('scrim').classList.remove('open'); $('drawer').classList.remove('open'); $('siteMenu').classList.remove('open'); editIdx=null; }
+function closeDrawer(){ $('scrim').classList.remove('open'); $('drawer').classList.remove('open'); var _va=$('viewAsDrawer'); if(_va) _va.classList.remove('open'); $('siteMenu').classList.remove('open'); editIdx=null; }
 function saveDrawer(){
   const a=$('fAcct').value; const isC=a==='client'; const p=isC?$('fPersona').value:$('fRole').value;
   const rec={ acct:a, first:$('fFirst').value.trim(), last:$('fLast').value.trim(), email:$('fEmail').value.trim(),
@@ -1126,14 +1148,21 @@ $('rmDisable').onclick=()=>{ const i=menuRowIdx; closeRowMenu(); setStatus(i,'Di
 $('rmDelete').onclick=()=>{ const i=menuRowIdx; closeRowMenu(); openDelete(i); };
 // impersonation: open the client dashboard as the chosen user/persona, with a banner to exit back here
 function mapPersona(p){ return {Director:'director',Manager:'manager',Executive:'exec','Program Administrator':'admin'}[p]||'director'; }
-function goImpersonate(persona, who, client){
+function goImpersonate(persona, who, client, sites){
   const q=new URLSearchParams({as:mapPersona(persona), who:who||persona, role:persona, client:client||''});
+  if(sites && sites.length) q.set('site', sites.join(','));
   window.location.href='ThriveIQ-Dashboard-v2.html?'+q.toString();
 }
-$('rmImpersonate').onclick=()=>{ const i=menuRowIdx; closeRowMenu(); if(i!=null){ const u=data[i]; goImpersonate(u.persona, ((u.first||'')+' '+(u.last||'')).trim(), u.org); } };
-$('viewAsBtn').onclick=()=>{ vaOrgPicker.set(ORG_LIST[0]||''); $('viewAsModal').classList.add('open'); };
-$('vaCancel').onclick=()=>{ $('viewAsModal').classList.remove('open'); };
-$('vaOk').onclick=()=>{ goImpersonate($('vaPersona').value, $('vaPersona').value, vaOrgPicker.get()); };
+$('rmImpersonate').onclick=()=>{ const i=menuRowIdx; closeRowMenu(); if(i!=null){ const u=data[i];
+  // Act as a specific user: inherit their real site when they are a Manager
+  var sites=(u.persona==='Manager' && u.site && u.site!=='All sites')?[u.site]:[];
+  goImpersonate(u.persona, ((u.first||'')+' '+(u.last||'')).trim(), u.org, sites); } };
+$('viewAsBtn').onclick=()=>{ vaOrgPicker.set(ORG_LIST[0]||''); toggleVaSite(); $('scrim').classList.add('open'); $('viewAsDrawer').classList.add('open'); };
+$('vaCancel').onclick=closeDrawer; $('vaClose').onclick=closeDrawer;
+$('vaOk').onclick=()=>{ var persona=$('vaPersona').value; var sites=[];
+  if(persona==='Manager'){ sites=[].slice.call($('vaSiteList').querySelectorAll('input.va-site:checked')).map(x=>x.value);
+    if(!sites.length){ alert('Pick at least one site for the Manager view.'); return; } }
+  goImpersonate(persona, persona, vaOrgPicker.get(), sites); };
 $('r2faCancel').onclick=()=>{ $('reset2faModal').classList.remove('open'); r2faIdx=null; };
 $('r2faOk').onclick=()=>{ $('reset2faModal').classList.remove('open'); r2faIdx=null; alert('Prototype: the authenticator is unlinked; the user must re-enroll and receives fresh recovery codes.'); };
 $('reinvCancel').onclick=()=>{ $('reinviteModal').classList.remove('open'); reinvIdx=null; };
@@ -1141,8 +1170,8 @@ $('reinvOk').onclick=()=>{ const i=reinvIdx; $('reinviteModal').classList.remove
 window.addEventListener('scroll', closeRowMenu, true);
 window.addEventListener('resize', closeRowMenu);
 
-document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeDrawer(); closeMenus(); $('confirm').classList.remove('open'); $('reset2faModal').classList.remove('open'); $('reinviteModal').classList.remove('open'); $('viewAsModal').classList.remove('open'); } });
-$('viewAsModal').addEventListener('click', e=>{ if(e.target.id==='viewAsModal') $('viewAsModal').classList.remove('open'); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeDrawer(); closeMenus(); $('confirm').classList.remove('open'); $('reset2faModal').classList.remove('open'); $('reinviteModal').classList.remove('open'); } });
+/* View-as is a drawer now; it closes via the shared scrim (closeDrawer) and the X / Cancel buttons. */
 syncSeg();
 
 // Client-facing login screen, shown after Log out (prototype); "Verify and sign in" returns to the app.
