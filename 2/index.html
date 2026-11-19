@@ -27,7 +27,7 @@
   .brand{display:flex; align-items:flex-end; gap:0; line-height:1;}
   .brand .wm{font-family:'orpheuspro',serif; font-weight:700; font-size:30px; letter-spacing:-0.01em;}
   .brand .wm .t{color:var(--ink);} .brand .wm .iq{color:var(--amber);}
-  .brand .pb{font-size:9px; font-style:italic; color:var(--amber); font-family:'orpheuspro',serif; margin-left:8px; margin-bottom:5px;}
+  .brand .pb{font-size:9px; font-style:italic; color:var(--amber-text); font-family:'orpheuspro',serif; margin-left:8px; margin-bottom:5px;}
   .logo-img{height:34px; width:auto; display:block;}
   .hero-num{display:flex; align-items:center; gap:18px; margin-bottom:8px;}
   .hero-num .big-n{font-size:92px; font-weight:600; line-height:0.9; color:var(--ink); letter-spacing:-0.02em;}
@@ -68,7 +68,7 @@
   .hero .eyebrow{font-size:13px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:16px;}
   .hero .big{font-family:'orpheuspro',serif; font-size:44px; line-height:1.08; font-weight:600; color:var(--ink); letter-spacing:-0.015em; max-width:15ch;}
   .hero .big b{color:var(--amber); font-weight:600;}
-  .hero .trend{margin-top:14px; font-size:15px; color:var(--green); font-weight:600;}
+  .hero .trend{margin-top:14px; font-size:15px; color:var(--green-text); font-weight:600;}
   .distro{margin-top:26px;}
   .distro .bar{display:flex; height:26px; border-radius:8px; overflow:hidden; border:1px solid var(--border);}
   .distro .seg-r{background:var(--green);} .distro .seg-a{background:var(--amber);} .distro .seg-l{background:var(--red);}
@@ -94,7 +94,7 @@
   .kpi .num{font-family:'orpheuspro',serif; font-size:52px; font-weight:600; line-height:1; color:var(--ink); margin:14px 0 6px; letter-spacing:-0.02em;}
   .kpi .num small{font-size:24px; color:var(--muted);}
   .kpi .delta{font-size:14px; font-weight:600; display:flex; align-items:center; gap:6px;}
-  .kpi .delta.up{color:var(--green);} .kpi .delta.flat{color:var(--muted);}
+  .kpi .delta.up{color:var(--green-text);} .kpi .delta.flat{color:var(--muted);}
   .kpi .ba{margin-top:16px; font-size:13px; color:var(--ink-2); background:var(--surface-2); border:1px solid var(--border); border-radius:9px; padding:9px 12px;}
   .kpi .ba b{color:var(--ink); font-family:'orpheuspro',serif;}
 
@@ -126,7 +126,7 @@
   .menu .sep{height:1px; background:var(--border); margin:6px 4px;}
   .menu a{display:flex; align-items:center; gap:11px; padding:10px 12px; border-radius:9px; font-size:14px; font-weight:500; color:var(--ink-2); text-decoration:none;}
   .menu a:hover{background:var(--surface-2); color:var(--ink);}
-  .menu a.logout{color:var(--red);}
+  .menu a.logout{color:var(--red-text);}
   .menu a .mi{width:16px; text-align:center; opacity:0.7;}
   .seg button{cursor:pointer;}
 
@@ -161,7 +161,7 @@
   .fs.hi .fsn{color:var(--ink); font-size:41px;}
   .kpi .delta{gap:6px;}
   .kpi .chip{display:inline-flex; align-items:center; gap:5px; padding:5px 11px; border-radius:999px; font-size:14px; font-weight:700; line-height:1;}
-  .kpi .delta.up .chip{background:var(--green-soft); color:var(--green);}
+  .kpi .delta.up .chip{background:var(--green-soft); color:var(--green-text);}
   .kpi .delta.flat .chip{background:var(--surface-2); color:var(--muted); border:1px solid var(--border);}
   .kpi .cap{font-size:12px; color:var(--muted); font-weight:500;}
 
@@ -335,7 +335,10 @@
   .reach.on{background:#e9f0ea;color:#467053;}
   /* --- accessibility / contrast pass (WCAG AA) --- */
   :root{--muted:#6c6c7b;                  /* was #8b8b9b (~3:1); now >=4.5:1 for small label/byline text */
-         --amber:#CC7D14;}                /* unify readiness bars + trend arrows; lightest amber that clears 3:1 as a non-text icon */
+         --amber:#CC7D14;                 /* FILL only: readiness bars, flags, trend arrows, dots; lightest amber that clears 3:1 as a non-text icon */
+         --green-text:#28795A;            /* AA text variants (>=4.5:1) for status used as small text; fills stay at --green/--amber/--red */
+         --amber-text:#995E0F;
+         --red-text:#BC3726;}
   /* visible keyboard focus for every interactive element */
   a:focus-visible, button:focus-visible, input:focus-visible, [role="button"]:focus-visible,
   th.srt:focus-visible, .infotip:focus-visible, .tarrow:focus-visible, .pers:focus-visible{
@@ -489,9 +492,9 @@
   .ptable .go a .garr{display:inline-block;transition:transform .16s ease;}
   .ptable .go a:hover .garr{transform:translateX(4px);}
   .lvl{display:inline-block;font-family:'Switzer',system-ui,sans-serif;font-size:12px;font-weight:600;line-height:1.4;letter-spacing:normal;padding:4px 11px;border-radius:20px;white-space:nowrap;vertical-align:middle;}
-  .lvl-green{background:#e7f4ec;color:#1f7a4d;}
-  .lvl-amber{background:#fbeecd;color:#8a5e0a;}
-  .lvl-red{background:#fce8e5;color:#b23b2e;}
+  .lvl-green{background:#e7f4ec;color:var(--green-text);}
+  .lvl-amber{background:#fbeecd;color:var(--amber-text);}
+  .lvl-red{background:#fce8e5;color:var(--red-text);}
   .lvl-neutral{background:var(--surface-2);color:var(--muted);border:1px solid var(--border);}
   .trendpill{font-variant-numeric:tabular-nums;}
   /* ---- Provider deep-dive drawer ---- */
@@ -928,14 +931,25 @@ const TESTERS={
 // impersonation: an admin arriving via "Act as" / "View as" carries ?as=<persona>&who=&role=&client=
 (function(){var p=new URLSearchParams(location.search); var as=p.get('as'); if(!as) return;
   var who=p.get('who')||'', role=p.get('role')||'', client=p.get('client')||'';
+  var siteParam=p.get('site')||'';
   var b=document.getElementById('impBanner');
   if(b){ b.style.display='flex';
     document.getElementById('impWho').textContent=who||role||as;
-    var meta=[]; if(role && role!==who) meta.push(role); if(client) meta.push(client);
+    var meta=[]; if(role && role!==who) meta.push(role); if(client) meta.push(client); if(siteParam) meta.push(siteParam);
     document.getElementById('impMeta').textContent = meta.length? ' \u00b7 '+meta.join(' \u00b7 ') : '';
     var ex=document.getElementById('impExit'); if(ex) ex.addEventListener('click',function(e){e.preventDefault(); location.href='ThriveIQ-Admin-Prototype.html';});
   }
-  if(as in P) render(as);
+  if(as in P){
+    // View-as / Act-as a Manager carries the site(s) to scope the preview to, so the admin sees
+    // exactly the manager's slice rather than a hardcoded default.
+    var sites=siteParam?siteParam.split(',').map(function(s){return s.trim();}).filter(Boolean):[];
+    if(sites.length && as==='manager' && P.manager && P.manager.scope){
+      P.manager.scope = Object.assign({}, P.manager.scope, {site: sites.slice()});
+      render(as);
+      window.VIEW.site = sites.slice();
+      if(window.__applyView) window.__applyView();
+    } else { render(as); }
+  }
 })();
 </script>
 <script>
@@ -1028,11 +1042,11 @@ const TESTERS={
     viewMenu.querySelectorAll('#vmRange a[data-r]').forEach(function(a){a.classList.toggle('on',a.getAttribute('data-r')===V.range);});
     viewMenu.querySelectorAll('input[data-vf]').forEach(function(x){var k=x.getAttribute('data-vf');x.checked=(V[k]||[]).indexOf(x.value)>-1;});
     if(viewLabel)viewLabel.textContent=scopeLabel();}
-  function minNGuard(){document.querySelectorAll('table.provtable').forEach(function(tbl){
+  function minNGuard(){var MINN=0; /* min-N threshold; 0 = disabled (Veronica 2026-11-19, transparency-first: show real numbers at every group size). Set back to 10 to re-enable small-group greying. */ document.querySelectorAll('table.provtable').forEach(function(tbl){
     var view=tbl.closest('.view'); if(!view)return; var grid=view.querySelector('.grid'); if(!grid)return;
     var vis=0; tbl.querySelectorAll('tbody tr').forEach(function(r){if(r.style.display!=='none')vis++;});
     var V=window.VIEW; var scoped=((V.site||[]).length||(V.prog||[]).length);
-    grid.classList.toggle('lowN', !!scoped && vis<10);});}
+    grid.classList.toggle('lowN', !!scoped && vis<MINN);});}
   window.__applyView=function(){var V=window.VIEW;
     curDays=RANGEDAYS[V.range]||30; curBaseline=BASELINE[V.range]||("the prior "+curDays+" days");
     if(typeof applyRange==='function')applyRange();
