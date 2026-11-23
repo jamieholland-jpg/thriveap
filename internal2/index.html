@@ -1451,7 +1451,7 @@ const TIPS={
   'Readiness (L3)':'Share of providers at L3, Demonstrated Readiness, based on assessment scores only.',
   'Avg knowledge gain':'Average gain from pre-program to latest post assessment score, in points.',
   'learner-outcomes|Confidence lift':'Average change in self-rated confidence, pre-program to 12 months, for providers with both surveys.',
-  'Total attendance':'Live sessions plus watched recordings. The table shows live attendance only.',
+  'Total attendance':'Live sessions plus watched recordings, the same as the table.',
   // Providers > Enrollment
   'Registered':'Referred or registered, not started yet.',
   'Participating':'Providers who have started and are in a program now.',
@@ -1498,12 +1498,12 @@ const TIPS={
   'Recognized':'Revenue recognized on the 12-month schedule from each provider\'s start.',
   'EBITDA':'From the last monthly close. The date range doesn\'t change it.',
   'finance|TCV':'Total contract value: all signed contracts, including deals that start later.',
-  'TCV to date':'Contract value from signed contracts that have started.',
+  'finance|ACV':'Annual contract value: what active contracts are worth each year, the part that turns into revenue in the next 12 months. Compared with last year.',
+  'Net revenue retention':"Revenue kept from last year's clients, after renewals, add-ons, downgrades and churn. Target 100%.",
   'Cash collected':'Payments received in the date range.',
   'Overdue 60+ days':'Unpaid invoices more than 60 days past due.',
   'DSO':'Days sales outstanding: average days from invoice to payment.',
   'Expected in 30 days':'Open invoices likely paid in 30 days, based on each client\'s average days to pay.',
-  'Expected in 60 days':'Open invoices likely paid in 60 days, based on each client\'s average days to pay.',
   // Sales & Marketing
   'Bookings vs plan':'Booked revenue as a share of plan for the period.',
   'New bookings':'Revenue from new deals, compared with the same period last year.',
@@ -1519,7 +1519,7 @@ function tipIcon(txt){ return txt?`<span class="infotip asof" tabindex="0" role=
 const SNAP_PAGES=['finance','enrollment-ops'];
 function syncStamp(){ const el=document.getElementById('asofStamp'); if(el) el.textContent=`Data as of ${(TODAY.getMonth()+1)}/${TODAY.getDate()}/${TODAY.getFullYear()}, 6:00 AM`; }
 // Metric dictionary (Jim's wish list, 11/10): one row per measure. Top-card rows read their definition from TIPS, so the dictionary and the ⓘ tips never disagree
-const GLOSS_ROWS=[["Providers", "Providers › Outcomes", "Count", "Providers"], ["Readiness (L3)", "Providers › Outcomes", "Percent", "Readiness (L3)"], ["Avg knowledge gain", "Providers › Outcomes", "Points", "Avg knowledge gain"], ["Confidence lift", "Providers › Outcomes", "Percent", "learner-outcomes|Confidence lift"], ["Total attendance", "Providers › Outcomes", "Count", "Total attendance"], ["Registered", "Providers › Enrollment", "Count", "Registered"], ["Participating", "Providers › Enrollment", "Count", "Participating"], ["Late requirements", "Providers › Enrollment", "Count", "Late requirements"], ["Graduating in 60 days", "Providers › Enrollment", "Count", "Graduating in 60 days"], ["Net participation (mo)", "Providers › Enrollment", "Count", "Net participation (mo)"], ["Needs outreach", "Providers › Watchlist", "Count", "Needs outreach"], ["Outreach made", "Providers › Watchlist", "Count", "Outreach made"], ["Addressed", "Providers › Watchlist", "Percent", "Addressed"], ["Clients affected", "Providers › Watchlist", "Count", "Clients affected"], ["Programs affected", "Providers › Watchlist", "Count", "Programs affected"], ["Enrollee NPS", "Programs", "Score, -100 to 100", "Enrollee NPS"], ["Feedback score", "Programs", "Rating, 1 to 5", "Feedback score"], ["Pre/post lift", "Programs", "Percent", "Pre/post lift"], ["Confidence lift", "Programs", "Percent", "program-health|Confidence lift"], ["Retention (12 mo)", "Programs", "Percent", "Retention (12 mo)"], ["Active clients", "Clients", "Count", "Active clients"], ["TCV", "Clients", "Dollars", "clients|TCV"], ["ACV", "Clients", "Dollars", "ACV"], ["Avg contract fill", "Clients", "Percent", "Avg contract fill"], ["At-risk accounts", "Clients", "Count", "At-risk accounts"], ["Pace", "Clients", "Status", "On pace or behind: seats filled against the 4- and 9-month fill targets for where the client is in its contract year."], ["Seats booked YTD", "Clients", "Count", "Seats booked YTD"], ["Participating YTD", "Clients", "Count", "Participating YTD"], ["Participating YTD %", "Clients", "Percent", "Participating YTD %"], ["Renewals in 90 days", "Clients", "Count", "Renewals in 90 days"], ["Behind pace", "Clients", "Count", "Behind pace"], ["Focus today", "Clients", "List", "Accounts needing attention now: renewal at risk or soon, behind pace, business review overdue for its tier, or room to expand."], ["Doctoral faculty", "Speakers", "Percent", "Doctoral faculty"], ["Avg lecture rating", "Speakers", "Rating, 1 to 5", "Avg lecture rating"], ["Sessions rated 5.0", "Speakers", "Count", "Sessions rated 5.0"], ["Coaching flags", "Speakers", "Count", "Coaching flags"], ["Lectures delivered", "Speakers", "Count", "Lectures delivered"], ["Lectures", "Speakers › Lecture feedback", "Count", "Lectures"], ["Avg rating", "Speakers › Lecture feedback", "Rating, 1 to 5", "Avg rating"], ["Prof. dev. rating", "Speakers › Lecture feedback", "Rating, 1 to 5", "Prof. dev. rating"], ["Low scores", "Speakers › Lecture feedback", "Count", "Low scores"], ["Comments", "Speakers › Lecture feedback", "Count", "Comments"], ["Revenue vs budget", "Finance", "Percent", "Revenue vs budget"], ["Recognized", "Finance", "Dollars", "Recognized"], ["EBITDA", "Finance", "Dollars", "EBITDA"], ["TCV", "Finance", "Dollars", "finance|TCV"], ["TCV to date", "Finance", "Dollars", "TCV to date"], ["Cash collected", "Finance", "Dollars", "Cash collected"], ["Overdue 60+ days", "Finance", "Dollars", "Overdue 60+ days"], ["DSO", "Finance", "Days", "DSO"], ["Expected in 30 days", "Finance", "Dollars", "Expected in 30 days"], ["Expected in 60 days", "Finance", "Dollars", "Expected in 60 days"], ["Bookings vs plan", "Sales & Marketing", "Percent", "Bookings vs plan"], ["New bookings", "Sales & Marketing", "Dollars", "New bookings"], ["Pipeline (next 12 mo)", "Sales & Marketing", "Dollars", "Pipeline (next 12 mo)"], ["MQLs", "Sales & Marketing", "Count", "MQLs"], ["Deals created", "Sales & Marketing", "Count", "Deals created"], ["Quarterly projection", "Overview", "Percent", "Projected bookings this quarter against plan, for new logos or existing logos."], ["New logo pipeline", "Overview", "Dollars", "Open new-client pipeline by deal stage, next 12 months."], ["Participating by week", "Overview", "Count", "Participating providers, with starts, graduates and seat fulfillment by week."], ["Registrations", "Finance", "Count", "Every registration in HubSpot, newest first, last 90 days."], ["Days to outreach", "Providers › Watchlist", "Days", "Days from a provider being flagged to the first outreach."], ["Resolved", "Providers › Watchlist", "Percent", "Flagged providers whose issue cleared after outreach."], ["Back on list", "Providers › Watchlist", "Percent", "Providers flagged again after outreach."], ["At risk", "Providers › Watchlist", "Status", "A provider back on the watchlist two or more times."], ["Revenue, next 6 months", "Forecast", "Dollars", "Revenue expected to be recognized over the next 6 months."], ["Providers in 6 months", "Forecast", "Count", "Providers expected to be participating 6 months from now."], ["New starts", "Forecast", "Count", "Providers expected to start in the next 6 months."], ["Expected renewals", "Forecast", "Dollars", "Contract value up for renewal in the next 6 months, at the chosen renewal rate."]];
+const GLOSS_ROWS=[["Providers", "Providers › Outcomes", "Count", "Providers"], ["Readiness (L3)", "Providers › Outcomes", "Percent", "Readiness (L3)"], ["Avg knowledge gain", "Providers › Outcomes", "Points", "Avg knowledge gain"], ["Confidence lift", "Providers › Outcomes", "Percent", "learner-outcomes|Confidence lift"], ["Total attendance", "Providers › Outcomes", "Count", "Total attendance"], ["Registered", "Providers › Enrollment", "Count", "Registered"], ["Participating", "Providers › Enrollment", "Count", "Participating"], ["Late requirements", "Providers › Enrollment", "Count", "Late requirements"], ["Graduating in 60 days", "Providers › Enrollment", "Count", "Graduating in 60 days"], ["Net participation (mo)", "Providers › Enrollment", "Count", "Net participation (mo)"], ["Needs outreach", "Providers › Watchlist", "Count", "Needs outreach"], ["Outreach made", "Providers › Watchlist", "Count", "Outreach made"], ["Addressed", "Providers › Watchlist", "Percent", "Addressed"], ["Clients affected", "Providers › Watchlist", "Count", "Clients affected"], ["Programs affected", "Providers › Watchlist", "Count", "Programs affected"], ["Enrollee NPS", "Programs", "Score, -100 to 100", "Enrollee NPS"], ["Feedback score", "Programs", "Rating, 1 to 5", "Feedback score"], ["Pre/post lift", "Programs", "Percent", "Pre/post lift"], ["Confidence lift", "Programs", "Percent", "program-health|Confidence lift"], ["Retention (12 mo)", "Programs", "Percent", "Retention (12 mo)"], ["Active clients", "Clients", "Count", "Active clients"], ["TCV", "Clients", "Dollars", "clients|TCV"], ["ACV", "Clients", "Dollars", "ACV"], ["Avg contract fill", "Clients", "Percent", "Avg contract fill"], ["At-risk accounts", "Clients", "Count", "At-risk accounts"], ["Pace", "Clients", "Status", "On pace or behind: seats filled against the 4- and 9-month fill targets for where the client is in its contract year."], ["Seats booked YTD", "Clients", "Count", "Seats booked YTD"], ["Participating YTD", "Clients", "Count", "Participating YTD"], ["Participating YTD %", "Clients", "Percent", "Participating YTD %"], ["Renewals in 90 days", "Clients", "Count", "Renewals in 90 days"], ["Behind pace", "Clients", "Count", "Behind pace"], ["Focus today", "Clients", "List", "Accounts needing attention now: renewal at risk or soon, behind pace, business review overdue for its tier, or room to expand."], ["Doctoral faculty", "Speakers", "Percent", "Doctoral faculty"], ["Avg lecture rating", "Speakers", "Rating, 1 to 5", "Avg lecture rating"], ["Sessions rated 5.0", "Speakers", "Count", "Sessions rated 5.0"], ["Coaching flags", "Speakers", "Count", "Coaching flags"], ["Lectures delivered", "Speakers", "Count", "Lectures delivered"], ["Lectures", "Speakers › Lecture feedback", "Count", "Lectures"], ["Avg rating", "Speakers › Lecture feedback", "Rating, 1 to 5", "Avg rating"], ["Prof. dev. rating", "Speakers › Lecture feedback", "Rating, 1 to 5", "Prof. dev. rating"], ["Low scores", "Speakers › Lecture feedback", "Count", "Low scores"], ["Comments", "Speakers › Lecture feedback", "Count", "Comments"], ["Revenue vs budget", "Finance", "Percent", "Revenue vs budget"], ["Recognized", "Finance", "Dollars", "Recognized"], ["EBITDA", "Finance", "Dollars", "EBITDA"], ["TCV", "Finance", "Dollars", "finance|TCV"], ["ACV", "Finance", "Dollars", "finance|ACV"], ["Net revenue retention", "Finance", "Percent", "Net revenue retention"], ["Cash collected", "Finance", "Dollars", "Cash collected"], ["Overdue 60+ days", "Finance", "Dollars", "Overdue 60+ days"], ["DSO", "Finance", "Days", "DSO"], ["Expected in 30 days", "Finance", "Dollars", "Expected in 30 days"], ["Bookings vs plan", "Sales & Marketing", "Percent", "Bookings vs plan"], ["New bookings", "Sales & Marketing", "Dollars", "New bookings"], ["Pipeline (next 12 mo)", "Sales & Marketing", "Dollars", "Pipeline (next 12 mo)"], ["MQLs", "Sales & Marketing", "Count", "MQLs"], ["Deals created", "Sales & Marketing", "Count", "Deals created"], ["Quarterly projection", "Overview", "Percent", "Projected bookings this quarter against plan, for new logos or existing logos."], ["New logo pipeline", "Overview", "Dollars", "Open new-client pipeline by deal stage, next 12 months."], ["Participating by week", "Overview", "Count", "Participating providers, with starts, graduates and seat fulfillment by week."], ["Registrations", "Finance", "Count", "Every registration in HubSpot, newest first, last 90 days."], ["Days to outreach", "Providers › Watchlist", "Days", "Days from a provider being flagged to the first outreach."], ["Resolved", "Providers › Watchlist", "Percent", "Flagged providers whose issue cleared after outreach."], ["Back on list", "Providers › Watchlist", "Percent", "Providers flagged again after outreach."], ["At risk", "Providers › Watchlist", "Status", "A provider back on the watchlist two or more times."], ["Revenue, next 6 months", "Forecast", "Dollars", "Revenue expected to be recognized over the next 6 months."], ["Providers in 6 months", "Forecast", "Count", "Providers expected to be participating 6 months from now."], ["New starts", "Forecast", "Count", "Providers expected to start in the next 6 months."], ["Expected renewals", "Forecast", "Dollars", "Contract value up for renewal in the next 6 months, at the chosen renewal rate."]];
 const GLOSS_ORDER=['Overview','Providers › Enrollment','Providers › Outcomes','Providers › Watchlist','Programs','Clients','Speakers','Speakers › Lecture feedback','Finance','Sales & Marketing','Forecast'];
 let glossQ='';
 function glossTable(){
@@ -1551,7 +1551,7 @@ const sumOf=(R,k)=>R.reduce((s,x)=>s+x[k],0);
 const moneyC=n=>{ n=Math.round(n); return Math.abs(n)>=1e6?'$'+(n/1e6).toFixed(Math.abs(n)>=1e7?0:1)+'M':Math.abs(n)>=1e3?'$'+(n/1e3).toFixed(0)+'K':'$'+n.toLocaleString(); };
 function tilesFor(key,R){
   if(key==='learner-outcomes'){ const cl=R.filter(x=>x.conf12!=null&&x.conf0!=null);
-    return [['Providers',R.length,''],['Readiness (L3)',pctWhere(R,x=>x.r==='green'),'%',false,'Share of providers at L3, Demonstrated Readiness.'],['Avg knowledge gain',avg(R,'kg'),'%'],['Confidence lift',cl.length?Math.round(cl.reduce((t,x)=>t+(x.conf12-x.conf0)/x.conf0*100,0)/cl.length):0,'%',false,'Average change from the pre-program to the 12-month confidence survey (7-point scale), for providers who have completed both'],['Total attendance',avg(R,'attAll'),'%',false,'Live sessions plus watched recordings. The table shows live attendance only.']]; }
+    return [['Providers',R.length,''],['Readiness (L3)',pctWhere(R,x=>x.r==='green'),'%',false,'Share of providers at L3, Demonstrated Readiness.'],['Avg knowledge gain',avg(R,'kg'),'%'],['Confidence lift',cl.length?Math.round(cl.reduce((t,x)=>t+(x.conf12-x.conf0)/x.conf0*100,0)/cl.length):0,'%',false,'Average change from the pre-program to the 12-month confidence survey (7-point scale), for providers who have completed both'],['Total attendance',avg(R,'attAll'),'%',false,'Live sessions plus watched recordings, the same as the table.']]; }
   if(key==='program-health') return [['Participants',R.length,''],['Avg completion',avg(R,'comp'),'%'],['Mean feedback',avg1(R,'rating'),'/5'],['Enrollee NPS',58,''],['Programs',new Set(R.map(x=>x.p)).size,'']];
   if(key==='enrollment-ops'){ const act=R.filter(x=>inStage(x,'Participating'));
     // tester feedback 11/4: Participating, Outstanding requirements (providers, not items), Graduating in 60 days, plus net participation
@@ -1567,7 +1567,7 @@ function colsFor(key){
   if(key==='program-health') return [['Name','n','name'],['Completion','comp','pct'],['Blocks done','blocks','blocks'],['Pre/post lift','kg','pct'],['Feedback given','rating','rating'],['Assessments','asmt','asmt']];
   if(key==='enrollment-ops') return [['Name','n','name'],['Status','estat','status'],['Standing','standing','status'],['Start date','start','date'],['End date','end','enddate'],['Requirements left','req','num'],['Outreach','reqout','reqacts'],['Certificate','cert','cert']];
   if(key==='finance') return [['Name','n','name'],['Stream','stream','stream'],['Fee','fee','money'],['Recognized','recognized','money'],['Deferred','deferred','money'],['Paid','paid','paidpill']];
-  return [['Name','n','name'],['Readiness','r','readiness'],['Pre → Post','post','prepost'],['Knowledge gain','kg','pct'],['Latest block','lastPB','lastpb'],['Confidence','confLift','confpp'],['Live attendance','att','pct'],['Assessments','asmt','asmt']];
+  return [['Name','n','name'],['Readiness','r','readiness'],['Pre → Post','post','prepost'],['Knowledge gain','kg','pct'],['Latest block','lastPB','lastpb'],['Confidence','confLift','confpp'],['Attendance','attAll','pct'],['Assessments','asmt','asmt']];
 }
 function pill(txt,cl){ return `<span class="lvl ${cl}">${txt}</span>`; }
 const PILLMAP={'On time':'lvl-green','Late':'lvl-amber','Not due yet':'lvl-muted','Missing':'lvl-red','Graduating':'lvl-blue','Active':'lvl-green','Watchlist':'lvl-amber','No-show':'lvl-red','Complete':'lvl-green','Pending':'lvl-amber','Not due':'lvl-muted','Issued':'lvl-green','In progress':'lvl-muted',
@@ -1622,7 +1622,7 @@ function pfOptions(c){ const key=c[1];
     case 'deferred': return band('deferred',[[0,0,'$0'],[1,999,'Under $1,000'],[1000,1e9,'$1,000+']]);
     case 'start': return [['Not started yet',x=>startAgo(x)<0],['Last 90 days',x=>startAgo(x)>=0&&startAgo(x)<=90],['3 to 6 months ago',x=>startAgo(x)>90&&startAgo(x)<=182],['Over 6 months ago',x=>startAgo(x)>182]].map(([l,t])=>({id:l,l,t}));
     case 'end': return [['Ending in 60 days',x=>!ENDED.includes(x.estat)&&x.daysLeft<=60],['61 to 180 days',x=>!ENDED.includes(x.estat)&&x.daysLeft>60&&x.daysLeft<=180],['Over 180 days',x=>!ENDED.includes(x.estat)&&x.daysLeft>180],['Ended',x=>ENDED.includes(x.estat)]].map(([l,t])=>({id:l,l,t}));
-    case 'estat': return ESTAT_GROUPS.map(([l,inc])=>({id:l,l,t:x=>inc.includes(x.estat)}));
+    case 'estat': { const o=ESTAT_GROUPS.map(([l,inc])=>({id:l,l,t:x=>inc.includes(x.estat)})); o.splice(2,0,{id:'Leave of absence',l:'Leave of absence',t:x=>x.estat==='Leave of absence'}); return o; }
     case 'standing': return catOpts('standing',['Good standing','Watchlist']);
     case 'asmt': return catOpts('asmt',['On time','Late','Not due yet']);
     case 'cert': return catOpts('cert',['Issued','Pending','In progress']);
@@ -1795,7 +1795,7 @@ document.addEventListener('mouseout',e=>{ const h=e.target.closest('.ytd-hit'); 
 const CN_COL={nl:'#312D78',el:'#06708B',st:'#06708B',gr:'#312D78'};
 const CN_STAGES=[['Discovery','#A2D1DD'],['Qualified','#06708B'],['Proposal','#312D78'],['Negotiation','#F8A73D']];
 const CN_G={W:400,H:230,L:44,Rt:4,T:10,B:22};
-let cnProj='nl';   // the projection card toggles between new and existing logos (Jamie 11/13)
+let cnProj='nl', cnPart='wk';   // the projection card toggles between new and existing logos (Jamie 11/13)
 let CN={};
 const md=d=>(d.getMonth()+1)+'/'+d.getDate();
 function cnData(){
@@ -1822,7 +1822,13 @@ function cnData(){
   const sf0=sumOf(ACCOUNTS,'seatsRegistered')/sumOf(ACCOUNTS,'seatsContracted')*100, sf=new Array(8); sf[7]=Math.round(sf0); sf[6]=sf[7]-1;
   for(let i=5;i>=0;i--) sf[i]=sf[i+1]-Math.round(rnd('sf'+i)*1.4);
   const part=w8.map((w,i)=>({w,a:act[i],s:st[i],g:gr[i],f:sf[i]}));
-  return {nl,el,pipe,part};
+  // by month: the last 6 months, this month to date; each earlier month = active - starts + graduates
+  const m6=Array.from({length:6},(_,i)=>new Date(T.getFullYear(),T.getMonth()-5+i,1,12)), frac=T.getDate()/new Date(T.getFullYear(),T.getMonth()+1,0).getDate();
+  const mst=m6.map((_,i)=>Math.round((62+rnd('mst'+i)*30)*(i===5?frac:1))), mgr=m6.map((_,i)=>Math.round((40+rnd('mgr'+i)*28)*(i===5?frac:1)));
+  const mact=new Array(6); mact[5]=A; for(let i=5;i>0;i--) mact[i-1]=mact[i]-mst[i]+mgr[i];
+  const msf=new Array(6); msf[5]=sf[7]; for(let i=4;i>=0;i--) msf[i]=msf[i+1]-Math.round(1+rnd('msf'+i)*2);
+  const partM=m6.map((w,i)=>({w,lbl:w.toLocaleString('en-US',{month:'short'}),mo:w.toLocaleString('en-US',{month:'long',year:'numeric'})+(i===5?', to date':''),a:mact[i],s:mst[i],g:mgr[i],f:msf[i]}));
+  return {nl,el,pipe,part,partM};
 }
 const cnStep=top=>{ const pow=Math.pow(10,Math.floor(Math.log10(top||1))); return [1,1.5,2,2.5,3,4,5,6,8,10].map(v=>v*pow).find(v=>v>=top); };
 const cnTip=(t,rows)=>`<div class="tt">${t}</div>`+rows.map(([l,v,c])=>`<div class="tr"><span>${c?`<i style="--c:${c}"></i>`:''}${l}</span><b>${v}</b></div>`).join('');
@@ -1846,7 +1852,7 @@ function cnBars(key,rows,series,fmt,tipFn){
   const {W,H,L,Rt,T,B}=CN_G, pw=W-L-Rt, ph=H-T-B, N=rows.length, slot=pw/N, stacked=series.stack;
   const top=Math.max(...rows.map(r=>stacked?r.t:Math.max(...series.keys.map(k=>r[k]))))/3, step=cnStep(top), Y=v=>T+ph-v/(step*3)*ph, base=Y(0);
   const grid=[0,1,2,3].map(i=>`<line class="gl" x1="${L}" x2="${W-Rt}" y1="${Y(step*i)}" y2="${Y(step*i)}"/><text class="ax" x="${L-8}" y="${Y(step*i)+4}" text-anchor="end">${fmt(step*i)}</text>`).join('');
-  const xl=rows.map((r,i)=>`<text class="ax" x="${L+(i+0.5)*slot}" y="${H-4}" text-anchor="middle">${md(r.w)}</text>`).join('');
+  const xl=rows.map((r,i)=>`<text class="ax" x="${L+(i+0.5)*slot}" y="${H-4}" text-anchor="middle">${r.lbl||md(r.w)}</text>`).join('');
   let bars='';
   if(stacked){ const bw=slot*0.42; rows.forEach((r,i)=>{ const x=L+i*slot+(slot-bw)/2; let acc=0; const last=r.v.length-1;
       r.v.forEach((v,j)=>{ const y0=Y(acc), y1=Y(acc+v); acc+=v; const h=y0-y1-(j<last?2:0); if(h<=0.5) return;
@@ -1867,11 +1873,12 @@ function cnPipeCard(R){ const a=R[7], b=R[6], ls=r=>(r.v[2]+r.v[3])/r.t*100;
   const plot=cnBars('pipe',R,{stack:true},moneyC,r=>cnTip('Week of '+md(r.w),CN_STAGES.map(([n,c],j)=>[n,moneyC(r.v[j])+' · '+Math.round(r.v[j]/r.t*100)+'%',c]).concat([['Total',moneyC(r.t)]])));
   const leg=`<div class="cn-leg">${CN_STAGES.map(([n,c])=>`<span><i style="--c:${c}"></i>${n}</span>`).join('')}</div>`;
   return cnCard('New logo pipeline','Open new-client pipeline by deal stage, next 12 months.',head,plot,leg); }
-function cnPartCard(R){ const a=R[7], b=R[6];
-  const fd=a.f-b.f, head=`<div class="num">${a.a.toLocaleString()}</div>`+cnAux([[`<i class="sw" style="--c:${CN_COL.st}"></i>`,a.s,'Starts this week'],[`<i class="sw" style="--c:${CN_COL.gr}"></i>`,a.g,'Graduates this week'],['',a.f+'%',`Seats filled, ${fd>=0?'up':'down'} ${Math.abs(fd)} pt${Math.abs(fd)===1?'':'s'}`]]);
-  const plot=cnBars('part',R,{keys:['s','g'],cols:[CN_COL.st,CN_COL.gr]},v=>Math.round(v).toLocaleString(),r=>cnTip('Week of '+md(r.w),[['Active',r.a.toLocaleString()],['Starts',r.s,CN_COL.st],['Graduates',r.g,CN_COL.gr],['Seat fulfillment',r.f+'%']]));
-  return cnCard('Participating','Participating providers, with starts and graduates by week.',head,plot); }
-document.addEventListener('click',e=>{ const b=e.target.closest('[data-cnp]'); if(!b) return; cnProj=b.dataset.cnp; renderOverview(); });
+function cnPartCard(RW,RM){ const mo=cnPart==='mo', R=mo?RM:RW, a=R[R.length-1], b=R[R.length-2], per=mo?'this month':'this week';
+  const fd=a.f-b.f, head=`<div class="num">${a.a.toLocaleString()}</div>`+cnAux([[`<i class="sw" style="--c:${CN_COL.st}"></i>`,a.s,'Starts '+per],[`<i class="sw" style="--c:${CN_COL.gr}"></i>`,a.g,'Graduates '+per],['',a.f+'%',`Seats filled, ${fd>=0?'up':'down'} ${Math.abs(fd)} pt${Math.abs(fd)===1?'':'s'}`]]);
+  const plot=cnBars('part',R,{keys:['s','g'],cols:[CN_COL.st,CN_COL.gr]},v=>Math.round(v).toLocaleString(),r=>cnTip(mo?r.mo:'Week of '+md(r.w),[['Active',r.a.toLocaleString()],['Starts',r.s,CN_COL.st],['Graduates',r.g,CN_COL.gr],['Net change',(r.s-r.g>=0?'+':'\u2212')+Math.abs(r.s-r.g)],['Seat fulfillment',r.f+'%']]));
+  const tog=`<div class="segtab">${[['wk','By week'],['mo','By month']].map(([k,l])=>`<button class="seg ${cnPart===k?'on':''}" data-cnpart="${k}">${l}</button>`).join('')}</div>`;
+  return cnCard('Participating','Participating providers, with starts and graduates by '+(mo?'month':'week')+'.',head,plot,'',tog); }
+document.addEventListener('click',e=>{ const b=e.target.closest('[data-cnp]'); if(b){ cnProj=b.dataset.cnp; renderOverview(); return; } const p=e.target.closest('[data-cnpart]'); if(p){ cnPart=p.dataset.cnpart; renderOverview(); } });
 document.addEventListener('mouseover',e=>{ const h=e.target.closest('.cn-hit'); if(!h) return;
   const D=CN[h.dataset.cn], p=D.pts[+h.dataset.i], plot=h.closest('.ytd-plot'), svg=plot.querySelector('svg'), tip=plot.querySelector('.ytd-tip');
   const band=svg.querySelector('.ytd-band'); if(band){ band.setAttribute('x',p.bx); band.classList.add('on'); }
@@ -1904,7 +1911,7 @@ function renderOverview(){
   const tog=`<div class="segtab">${[['nl','New'],['el','Existing']].map(([k,l])=>`<button class="seg ${cnProj===k?'on':''}" data-cnp="${k}">${l}</button>`).join('')}</div>`;
   const proj=cnProj==='nl'?cnProjCard('nl','Quarterly projection','Projected new-client bookings this quarter against plan.',C.nl,CN_COL.nl,tog)
     :cnProjCard('el','Quarterly projection','Projected renewal and expansion bookings this quarter against plan.',C.el,CN_COL.el,tog);
-  const cnCards=[proj,cnPipeCard(C.pipe),cnPartCard(C.part)].join('');   // three cards: projection (new / existing toggle), pipeline, participants
+  const cnCards=[proj,cnPipeCard(C.pipe),cnPartCard(C.part,C.partM)].join('');   // three cards: projection (new / existing toggle), pipeline, participants
   document.getElementById('viewHost').innerHTML=`<div class="ovsec"><h2 class="serif">My numbers</h2><span class="infotip" tabindex="0" role="note" data-tip="Star any number on a page to pin it here, up to ${PIN_MAX}." aria-label="Star any number on a page to pin it here, up to ${PIN_MAX}.">i</span></div>
     <div class="grid row-5">${pins}</div>
     <div class="ovsec mt30"><h2 class="serif">Company numbers</h2>${tipIcon('Everyone sees these. Updated weekly.')}</div>
@@ -1965,7 +1972,7 @@ function gcell(row,c,ck){ const [lab,key,kind]=c;
     case 'money': return `<td class="num">$${row[key].toLocaleString()}</td>`;
     case 'num': return `<td class="num">${(row[key]).toLocaleString()}</td>`;
     case 'seats': return `<td class="num">${row.seatsRegistered} / ${row.seatsContracted}</td>`;
-    case 'lines': return `<td class="num" data-ftip="${escH(row.lines.join(', '))}" tabindex="0">${row.linesUsed} of ${row.offered.length}</td>`;
+    case 'lines': return `<td class="num" data-ftip="${escH('Uses: '+row.lines.join(', ')+'. '+(row.offered.length>row.linesUsed?'Not yet: '+row.offered.filter(x=>!row.lines.includes(x)).join(', ')+'.':'Uses every line it offers.'))}" tabindex="0">${row.linesUsed} of ${row.offered.length}</td>`;
     case 'risk': return `<td>${row[key]==='red'?pill('At risk','lvl-red'):''}</td>`;
     case 'tier': return `<td>${row.icp}</td>`;   // plain text: tier is a category every client has, not a status
     // like At risk, only the exception gets a pill
@@ -2040,7 +2047,7 @@ const tenure=a=>{ const end=a.status==='Inactive'?a.ended:CL_NOW, m=Math.max(0,M
 function ensureActive(){ if(ensureActive.done) return; ensureActive.done=true;
   ACCOUNTS.concat(FORMER).forEach(setPace);
   // service lines: the client's lines we serve (its program mix) out of the lines it offers
-  ACCOUNTS.concat(FORMER).forEach(a=>{ const d=asynth(a), q=mulberry32(29000+a.id); a.sub=a.owner+', AE'; a.icp=d.icp; a.tierN={Gold:1,Silver:2,Bronze:3}[d.icp];
+  ACCOUNTS.concat(FORMER).forEach(a=>{ const d=asynth(a), q=mulberry32(29000+a.id); const sh=n=>{ const p=n.split(' '); return p[0]+' '+p[p.length-1][0]+'.'; }; a.sub=sh(a.owner)+', AE · '+sh(a.ac)+', AC'; a.icp=d.icp; a.tierN={Gold:1,Silver:2,Bronze:3}[d.icp];
     a.reviewEvery=REVIEW_EVERY[d.icp]; a.lastReview=Math.round(10+mulberry32(32000+a.id)()*a.reviewEvery[0]*1.06); a.lines=d.mix.slice(); const extra=SUBJECTS.filter(sj=>!a.lines.includes(sj));
     a.offered=a.lines.concat(extra.filter(()=>q()<0.3).slice(0,2+Math.floor(q()*4))); a.linesUsed=a.lines.length; });
   ACCOUNTS.forEach(a=>{ const r=mulberry32(27000+a.id); a.active=Math.round(a.seatsRegistered*(0.84+r()*0.14))+Math.floor(r()*5); }); }   // sample: active enrollees, including carryover not counted toward this contract
@@ -2059,6 +2066,10 @@ function clientScopeMenu(){ const r=PAGE_RANGE.clients; return `<a href="#" data
 const clientScopeLabel=()=>{ const p=Object.keys(CSC).filter(k=>CSC[k]).map(k=>k==='renew'?'Renews in '+RENEW_B.find(b=>b[0]===CSC.renew)[1].toLowerCase():k==='icp'?CSC.icp+' tier':k==='pace'?(CSC.pace==='Behind'?'Behind pace':'On pace'):CSC[k]); if(PAGE_RANGE.clients) p.push(rangeLbl(PAGE_RANGE.clients)); return p.length?p.join(' · '):'All clients'; };
 function clientsIn(){ ensureActive(); const r=curRange(), L=ACCOUNTS.concat(FORMER).filter(cMatch).filter(a=>!r||(a.since<=rangeEnd(r)&&(a.status==='Active'||a.ended>=rangeStart(r)))); if(!r) return L; return L.map(a=>({...a,enps:Math.round(Math.max(0,Math.min(100,a.enps+wob('np'+a.id,6))))})); }
 // clients table: the standard column filter (health, fill bands, days to renewal, account owner)
+// Focus today (Cori, Ryan 11/20): last contact and HubSpot's Next step note, so nobody chases an account already in motion. Sample data; HubSpot in the build
+const HS_NEXT=['Renewal call booked for next week','Sent seat report, waiting on reply','QBR on the calendar','Proposal for added seats drafted','Asked the client leader for start dates','Follow up after their budget meeting'];
+const CONTACT_VIA=['Email','Call','Meeting'];
+function contactOf(a){ if(a._ct) return a._ct; const q=mulberry32(41000+a.id); const days=1+Math.floor(q()*q()*55), via=CONTACT_VIA[Math.floor(q()*3)], nx=q()<0.55?HS_NEXT[Math.floor(q()*HS_NEXT.length)]:''; return a._ct={days,via,nx}; }
 function focusRows(ACT){ ensureActive(); const out=[];
   ACT.forEach(a=>{ const d=asynth(a), head=Math.max(0,d.appsBonfire-a.active), R=[];
     if(a.risk==='red') R.push([1,'Renewal at risk','lvl-red',`Renews in ${a.daysToRenewal} days at ${a.fillPct}% fill`,'Plan the renewal conversation']);
@@ -2069,10 +2080,11 @@ function focusRows(ACT){ ensureActive(); const out=[];
     if(R.length){ R.sort((x,y)=>x[0]-y[0]); out.push({a,R}); } });
   return out.sort((x,y)=>x.R[0][0]-y.R[0][0]||(x.a.daysToRenewal-y.a.daysToRenewal)); }
 function focusView(ACT){ const F=focusRows(ACT);
-  return brkView(clientTabs(),F.length===1?'account':'accounts',['Client','Why','Detail','Next step'],F.map(({a,R})=>[
+  return brkView(clientTabs(),F.length===1?'account':'accounts',['Client','Why','Detail','Last contacted','Next step'],F.map(({a,R})=>{ const c=contactOf(a); return [
     `<div class="pcell" data-acc="${a.id}"><div class="pnmv">${a.n}</div><div class="pbyl">${a.sub}</div></div>`,
     pill(R[0][1],R[0][2])+(R.length>1?` <span class="fmore" data-ftip="${escH(R.slice(1).map(r=>r[1]).join(', '))}" tabindex="0">+${R.length-1}</span>`:''),
-    R[0][3],`<b class="fnext">${R[0][4]}</b>`]),true); }
+    R[0][3],`${c.days===1?'Yesterday':c.days+' days ago'}<div class="pbyl">${c.via}</div>`,
+    c.nx?`<b class="fnext">${c.nx}</b><div class="pbyl">HubSpot next step</div>`:`<b class="fnext">${R[0][4]}</b><div class="pbyl">Suggested, nothing in HubSpot</div>`]; }),true); }
 function clientTable(){ if(clientView==='ae') return aeBreakdown(ACCOUNTS.filter(cMatch)); if(clientView==='focus') return focusView(ACCOUNTS.filter(cMatch));
   const all=clientsIn(), A=pfApply('clients',CLIENT_COLS,all); VIEW_ROWS.acc=A;
   const nf=Object.values(PF.clients||{}).reduce((t,a)=>t+a.length,0);
@@ -2081,13 +2093,13 @@ function clientTable(){ if(clientView==='ae') return aeBreakdown(ACCOUNTS.filter
 // leadership view (Cori 11/13): each AE's book, with overall totals in the cards above. Picking a name filters the page to that AE
 let clientView='list';
 function aeBreakdown(ACT){ const rows=AES.map(n=>{ const A=ACT.filter(a=>a.owner===n); return {n,c:A.length,tcv:sumOf(A,'contractValue'),acv:sumOf(A,'acv'),fill:avg(A,'fillPct'),risk:A.filter(a=>a.risk==='red').length,behind:A.filter(a=>a.pace==='Behind').length,r90:A.filter(a=>a.daysToRenewal<=90).length}; }).filter(r=>r.c);
-  return brkView(clientTabs(),'account executives',['Account executive','Clients','TCV','ACV','Avg fill','Behind pace','At risk','Renewals in 90 days'],rows.map(r=>[`<a href="#" class="brk-n" data-brk="ae" data-v="${escH(r.n)}">${r.n}</a>`,r.c,moneyC(r.tcv),moneyC(r.acv),r.fill+'<span class="u">%</span>',r.behind,r.risk,r.r90])); }
+  return brkView(clientTabs(),'account executives',['Account executive','Clients','TCV','ACV','Avg fill','Behind pace','At risk','Renewals in 90 days'],rows.map(r=>{ const dl=(n,f)=>n?`<a href="#" class="brk-n" data-brk="ae" data-v="${escH(r.n)}" data-f="${f}">${n}</a>`:n; return [`<a href="#" class="brk-n" data-brk="ae" data-v="${escH(r.n)}">${r.n}</a>`,dl(r.c,'Active clients'),moneyC(r.tcv),moneyC(r.acv),r.fill+'<span class="u">%</span>',dl(r.behind,'Behind pace'),dl(r.risk,'At-risk accounts'),dl(r.r90,'Renewals in 90 days')]; })); }
 const clientTabs=()=>`<div class="segtab">${[['list','Clients'],['ae','By account executive'],['focus','Focus today']].map(([k,l])=>`<button type="button" class="seg ${clientView===k?'on':''}" data-cview="${k}">${l}</button>`).join('')}</div>`;
 // a breakdown shown inside the main table card, behind its view toggle
 function brkView(tabs,unit,head,rows,allText){ return `<div class="card ptcard brk"><div class="att-head ptbar" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><div class="pt-left">${tabs}<span class="count-pill"><b>${rows.length}</b> ${unit}</span></div></div>
   <div class="pt-scrollwrap"><div class="ptwrap"><table class="ptable"><thead><tr>${head.map((h,i)=>`<th class="${i&&!allText?'num':''}">${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td class="${i&&!allText?'num':'l'}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div></div>`; }
 document.addEventListener('click',e=>{ const v=e.target.closest('[data-cview]'); if(v){ clientView=v.dataset.cview; refreshPT(); return; }
-  const b=e.target.closest('[data-brk]'); if(!b) return; e.preventDefault(); if(b.dataset.brk==='ae'){ CSC.ae=b.dataset.v; clientView='list'; } else if(b.dataset.brk==='fac'){ scope.faculty=+b.dataset.v; watchView='list'; } else { scope.ac=b.dataset.v; watchView='list'; } afterScope(); });
+  const b=e.target.closest('[data-brk]'); if(!b) return; e.preventDefault(); if(b.dataset.brk==='ae'){ CSC.ae=b.dataset.v; clientView='list'; PF.clients=b.dataset.f?JSON.parse(JSON.stringify(TFILT.clients[b.dataset.f])):{}; } else if(b.dataset.brk==='fac'){ scope.faculty=+b.dataset.v; watchView='list'; } else { scope.ac=b.dataset.v; watchView='list'; } afterScope(); });
 function renderClients(){
   document.getElementById('pheadTitle').innerHTML=`<h1 class="serif">Client Success &amp; Health</h1>`;
   const A=clientsIn();
@@ -2241,7 +2253,7 @@ function renderOutlook(){
     card('Expected renewals',moneyC(S.renewV),`${S.dueN} contracts, ${moneyC(S.dueV)} due by ${last.lbl}`,'Contract value up for renewal in the next 6 months, at the renewal rate above.')].join('');
   const seg=(k,opts)=>`<div class="segtab">${opts.map(([v,l])=>`<button class="seg ${OLS[k]===v?'on':''}" data-olk="${k}" data-olv="${v}">${l}</button>`).join('')}</div>`;
   const ctrl=`<div class="card ol-ctrl">
-    <div class="olg"><div class="oll">Start delays</div>${seg('delay',[[0,'None'],[1,'1 month'],[2,'2 months']])}</div>
+    <div class="olg"><div class="oll">Start delays${tipIcon("What if providers who haven't started yet start 1 or 2 months later than planned.")}</div>${seg('delay',[[0,'None'],[1,'1 month'],[2,'2 months']])}</div>
     <div class="olg"><div class="oll">Renewal rate</div>${seg('rate',[[90,'90%'],[80,'80%'],[70,'70%']])}</div>
     <div class="olg"><div class="oll">Seat fill pace</div>${seg('fill',[[100,'Current'],[85,'85%'],[70,'70%']])}</div>
     <button class="ol-reset" data-olreset ${same?'disabled':''}><span aria-hidden="true">&#8634;</span>Reset to baseline</button></div>`;
@@ -2270,10 +2282,11 @@ document.addEventListener('mouseout',e=>{ const h=e.target.closest('.ol-hit'); i
    Templates from the interview inventory. The client monthly report and the QBR are one report with an adjustable date range (Veronica 11/10);
    registrations are covered by the Finance Registrations card. Each template opens a drawer: set the details, download the data. Placeholder only. */
 const REPORTS=[   // Veronica's six (11/10), in her order
-  {k:'client',n:'Client monthly report',d:'Seats and the provider roster, with each provider\u2019s attendance, scores, readiness, confidence and feedback. Includes QBR data.',cad:'Monthly or for a QBR',p:['client','site','range'],inc:['Contracted seats, seats used and seats available','Provider roster, current and graduates','Attendance','Assessment scores','Readiness','Confidence','Feedback score','Written feedback','Watchlist names','Office hours used']},
+  {k:'client',n:'Client monthly report',d:'Seats and the provider roster, with each provider\u2019s attendance, scores, readiness, confidence and feedback. Includes QBR data, in the same columns as today\u2019s client export.',cad:'Monthly or for a QBR',p:['client','site','range'],inc:['Contracted seats, seats used and seats available','Provider roster, current and graduates','Attendance','Assessment scores','Readiness','Confidence','Feedback score','Written feedback','Watchlist names','Office hours used']},
   {k:'rev',n:'Revenue recognition and daily revenue',d:'Recognized and deferred revenue by day, stream and program.',cad:'Daily and month-end',p:['range','track','program'],inc:['Revenue by day, month, quarter and year','By stream and program','Deferred balance','Variance']},
   {k:'reg',n:'Registrations, drops and credits',d:'New registrations, drops and credits, and whether each has gone to finance.',cad:'Daily or weekly',p:['range','client'],inc:['New registrations: provider, client, program and start date','Drops','Credits','Sent to finance']},
   {k:'grad',n:'Graduating soon: what\u2019s missing',d:'Every graduating provider\u2019s requirements: Completed, Not due yet or Late.',cad:'Weekly or monthly',p:['gradmonth','program','client'],inc:['Provider, client and program','Graduation date','Each requirement and its status','Exit and confidence surveys']},
+  {k:'grads',n:'Graduates',d:'Providers who graduated, by graduation date and client, with their outcomes, confidence and engagement.',cad:'Monthly or for a QBR',p:['range','client','program'],inc:['Provider, client, program and graduation date','Knowledge gain and readiness','Confidence, pre-program to 12 months','Attendance and feedback given','Certificate and exit survey']},   // Cori 11/20
   {k:'apr',n:'Annual program review',d:'Participant growth, block outcomes, speakers, NPS and every comment.',cad:'Annual',p:['program','year'],inc:['Participant growth','Block-level feedback and assessments','Speaker performance','NPS, lift and confidence','Every comment']},
   {k:'wpr',n:'Weekly Program Review',d:'This and next week\u2019s lectures, with last week\u2019s ratings and low scores.',cad:'Weekly',p:['week','program'],inc:['Lectures, speakers and faculty','Zoom host','Last week\u2019s ratings','Low scores and the providers behind them']}];
 // build your own: pick what each row is, then the columns
@@ -2346,19 +2359,21 @@ document.addEventListener('change',e=>{ if(!repDraw) return;
 function renderFinance(){
   document.getElementById('pheadTitle').innerHTML=`<h1 class="serif">Finance</h1>`;
   // period numbers follow the page date range; deferred revenue, contract value and the daily rate are as of today; EBITDA is as of the last monthly close
-  const R=ROSTER, M=v=>'$'+Math.round(v).toLocaleString(), r=curRange(), RL=rangeLbl(r), fr=rangeDays(r)/ALL_DAYS;
+  // Michele 11/23: on the 1st she wants the whole month's revenue, including providers who start later that month, not a number that grows day by day
+  const R=ROSTER, M=v=>'$'+Math.round(v).toLocaleString(), r=curRange(), RL=rangeLbl(r), monDays=new Date(TODAY.getFullYear(),TODAY.getMonth()+1,0).getDate(), fullMon=r==='month', fr=(fullMon?monDays:rangeDays(r))/ALL_DAYS, monName=TODAY.toLocaleString('en-US',{month:'long'});
   const recAll=sumOf(R,'recognized'), amortizing=sumOf(R,'deferred'), contractVal=sumOf(ACCOUNTS,'contractValue'), rec=recAll*fr;
   // contract value to date leaves out signed deals that haven't started yet (Michele 11/4: December deals sit in TCV only)
-  const toDate=Math.round(contractVal*0.93/1000)*1000, deferredTot=Math.round(amortizing*1.16);
+  const toDate=Math.round(contractVal*0.93/1000)*1000, deferredTot=Math.round(amortizing*1.16), acvNow=sumOf(ACCOUNTS,'acv'), acvLY=Math.round(acvNow/1.062);
   const avgFee=avg(R,'fee'), dropsN=inRange(R.filter(x=>x.dropMo).length,30,'drops'), dropsAmt=Math.round(dropsN*avgFee*0.42);
   const rvb=Math.round(93+wob('rvb',4));
   // closed periods: late-reported drops lowered revenue after the close, so the close showed a little more
   // a month-end close shows revenue as reported then; late-reported drops have lowered it a little since
   const snap=isClose(r), mv=snap&&r!=='c1'?0.9+mulberry32(strSeed('closerec'+r))()*0.2:1, recD=snap?rec*1.018*mv:rec, rvbD=snap?Math.round((rvb+2)*(r==='c1'?1:0.96+mv*0.06)):rvb;
-  const tiles=[['Revenue vs budget',rvbD,'%',false,null,null,moneyC(recD)+' of '+moneyC(rec/rvb*100)+' budget'],['Recognized',moneyC(recD),'',false,null,null,'On the 12-month schedule'],
+  const tiles=[['Revenue vs budget',rvbD,'%',false,null,null,moneyC(recD)+' of '+moneyC(rec/rvb*100)+' budget'],['Recognized',moneyC(recD),'',false,fullMon?'All revenue recognized in '+monName+', including providers who start later in the month.':null,null,fullMon?'All of '+monName:'On the 12-month schedule'],
     ['EBITDA',moneyC(412000),'',false,"Updates once a month; the date range doesn't change it.",null,'As of the October close'],
-    ['TCV',moneyC(contractVal),'',true,'Total contract value: all signed contracts, including deals that start later.',null,ACCOUNTS.length+' signed contracts'],
-    ['TCV to date',moneyC(toDate),'',true,'Contract value to date: contracts that have started.',null,moneyC(contractVal-toDate)+' starts later']].map(t=>tile(...t)).join('');
+    ['TCV',moneyC(contractVal),'',true,'Total contract value: all signed contracts, including deals that start later.',null,moneyC(contractVal-toDate)+' starts later'],
+    // Michele 11/23: ACV is what turns into revenue in the next 12 months; a big TCV year can still mean a weak income statement
+    ['ACV',moneyC(acvNow),'',true,'Annual contract value: what active contracts are worth each year, the part that turns into revenue in the next 12 months.','vs last year',moneyC(acvLY)+' last year',Math.round((acvNow/acvLY-1)*1000)/10]].map(t=>tile(...t)).join('');
   const prow=(nm,c,v)=>`<div class="prow"><div><div class="pn">${nm}</div>${c?`<div class="pc">${c}</div>`:''}</div><div class="pctv">${v}</div></div>`;
   const cpill=(n,u)=>`<span class="count-pill"><b>${n}</b> ${u}</span>`, ctitle=(t,p)=>`<div class="pt-left"><h3 class="serif">${t}</h3>${p||''}</div>`;
   // one revenue card: by program (Michele 11/4: revenue by client isn't reported today) or by stream
@@ -2412,11 +2427,11 @@ function renderFinance(){
   const cashBy=r?moneyC(daily*priorDays*0.97)+' '+PRIOR[rP][0]:'Since '+histStart.toLocaleString('en-US',{month:'long',year:'numeric'});
   // the arrow compares like with like: same point in the prior period for "this" ranges, the full period before for "last" ranges
   const cash=daily*rangeDays(r)*(0.94+wob('cash',0.04)), cashCmp=r?daily*(rP[0]==='l'?priorDays:rangeDays(r))*0.97:null;
-  const arTiles=[['Cash collected',moneyC(cash),'',false,'Payments received in the date range.',r?PRIOR[rP][1]:null,cashBy,r?Math.round((cash/cashCmp-1)*1000)/10:null],
+  const nrr=Math.round(103+wob('nrr',2));
+  const arTiles=[['Net revenue retention',nrr,'%',false,"Revenue kept from last year's clients, after renewals, add-ons, downgrades and churn. Target 100%. Updates once a month; the date range doesn't change it.",null,'Target 100%'],['Cash collected',moneyC(cash),'',false,'Payments received in the date range.',r?PRIOR[rP][1]:null,cashBy,r?Math.round((cash/cashCmp-1)*1000)/10:null],
     ['Overdue 60+ days',moneyC(sumOf(od,'amt')),'',true,'Unpaid invoices more than 60 days past due.',null,Math.round(sumOf(od,'amt')/openAR*100)+'% of '+moneyC(openAR)+' open A/R'],
     ['DSO',dso,' days',true,'Days sales outstanding: average days from sending an invoice to collecting it.',null,'Terms are net '+TERMS],
-    ['Expected in 30 days',moneyC(sumOf(e30,'amt')),'',true,expTip(30),null,e30.length+' invoices',4.2],
-    ['Expected in 60 days',moneyC(sumOf(e30,'amt')+sumOf(e60,'amt')),'',true,expTip(60),null,moneyC(sumOf(e60,'amt'))+' in days 31 to 60',2.6]].map(t=>tile(...t)).join('');
+    ['Expected in 30 days',moneyC(sumOf(e30,'amt')),'',true,expTip(30)+' The line below adds days 31 to 60.',null,moneyC(sumOf(e60,'amt'))+' more in days 31 to 60',4.2]].map(t=>tile(...t)).join('');
   const payTxt=a=>a.payHist<3?`new client, company average ${CO_PAY} days`:`usually pays in ${a.payDays} days`;
   // open: Michele's top 5, with the full count and total in the subtitle; overdue: every invoice (each one needs chasing) plus a total
   const arOver=finAR==='over', arList=(arOver?od:AR_INV).slice().sort((x,y)=>y.amt-x.amt).slice(0,arOver?999:5), odAmt=sumOf(od,'amt');
@@ -2426,7 +2441,7 @@ function renderFinance(){
       :arOver?`<div class="prog-scroll">${arList.map(arRow).join('')}</div><div class="prow ptot"><div><div class="pn">Total</div><div class="pc">${od.length} invoice${od.length===1?'':'s'} across ${new Set(od.map(v=>v.cl.id)).size} client${new Set(od.map(v=>v.cl.id)).size===1?'':'s'}</div></div><div class="pctv">${M(odAmt)}</div></div>`
       :`<div class="prog-scroll">${arList.map(arRow).join('')}</div><div class="prow ptot"><div><div class="pn">All open invoices</div><div class="pc">${AR_INV.length} invoices across ${new Set(AR_INV.map(v=>v.cl.id)).size} clients</div></div><div class="pctv">${M(openAR)}</div></div>`}</div>`;
   const rvar=Math.round((3.4+wob('rvar',3))*10)/10;
-  const recRows=`${prow('Recognized',RL+', on the 12-month schedule',M(rec))}
+  const recRows=`${prow('Recognized',fullMon?'All of '+monName+', including later starts':RL+', on the 12-month schedule',M(rec))}
     ${prow('Deferred revenue','Invoiced, not yet recognized, as of today',M(deferredTot))}
     ${prow('Currently amortizing (future periods)','Enrolled seats, waterfall, as of today',M(amortizing))}
     ${prow('Unamortized deferred','Invoiced seats nobody has enrolled in yet',M(unamort))}
@@ -2444,7 +2459,7 @@ function renderFinance(){
 
 function syncRange(){ const r=PAGE_RANGE[current]; document.getElementById('rangeLabel').textContent=rangeLbl(r);
   const snapSec=SNAP_PAGES.includes(current)?`<div class="mlabel">Month-end close</div><select class="scope-select" data-prsel="1"><option value="">Choose a month</option>${CLOSES.map(k=>`<option value="${k}" ${r===k?'selected':''}>${rangeLbl(k)}</option>`).join('')}</select>`:'';
-  document.getElementById('rangeMenu').innerHTML=[['',"All time"]].concat(Object.keys(RANGES).map(k=>[k,rangeLbl(k)])).map(([k,l])=>`<a href="#" data-prange="${k}" class="${(r||'')===k?'on':''}">${l}</a>`).join('')+snapSec;
+  document.getElementById('rangeMenu').innerHTML=[['',"All time"]].concat(Object.keys(RANGES).filter(k=>current!=='finance'||!/week$/.test(k)).map(k=>[k,rangeLbl(k)])).map(([k,l])=>`<a href="#" data-prange="${k}" class="${(r||'')===k?'on':''}">${l}</a>`).join('')+snapSec;
   syncStamp(); }
 /* ---- router ---- */
 let current='overview';
@@ -2503,7 +2518,8 @@ function openExport(btn){ const m=document.getElementById('expMenu'), dw=btn.clo
   const prov=dw&&dw.id==='drawer', acc=dw&&dw.id==='accDrawer';
   m.innerHTML=`<div class="exphd">Export ${escH(what)}</div>
     ${prov?`<a href="#" data-exp="prog"><span class="xf">PDF</span><span class="xt"><b>Progress report</b><small>For the provider\u2019s APP leader, ready to share.</small></span></a>
-    <a href="#" data-exp="reqs"><span class="xf">PDF</span><span class="xt"><b>Outstanding requirements</b><small>For the provider: what\u2019s left and when it\u2019s due.</small></span></a>`:''}
+    <a href="#" data-exp="reqs"><span class="xf">PDF</span><span class="xt"><b>Outstanding requirements</b><small>For the provider: what\u2019s left and when it\u2019s due.</small></span></a>
+    <a href="#" data-exp="lfb"><span class="xf">CSV</span><span class="xt"><b>Lecture feedback</b><small>Every rating and comment this provider gave, by lecture.</small></span></a>`:''}
     ${acc?`<a href="#" data-exp="roi"><span class="xf">PNG</span><span class="xt"><b>ROI and retention graphics</b><small>The client\u2019s ROI and retention charts, ready for a slide.</small></span></a>`:''}
     <a href="#" data-exp="pdf" ${prov?'hidden':''}><span class="xf">PDF</span><span class="xt"><b>Summary</b><small>${dw?'This record as shown, ready to share.':'The cards and charts on this page, as shown.'}</small></span></a>
     <a href="#" data-exp="csv"><span class="xf">CSV</span><span class="xt"><b>Underlying data</b><small>${dw?'Every record behind this view, one row each.':'Every row behind this page, with your current filters.'}</small></span></a>
@@ -2516,14 +2532,14 @@ document.addEventListener('click', e=>{
   const rx=e.target.closest('[data-regexp]'); if(rx){ e.preventDefault(); toast(`Sample only: ${(+rx.dataset.regexp).toLocaleString()} registrations from the last 90 days would download as a CSV (name, organization, program, track, registration date).`); return; }
   { const m=document.getElementById('expMenu');
     const xb=e.target.closest('.exportbtn'); if(xb){ if(m.classList.contains('open')&&m._btn===xb) m.classList.remove('open'); else openExport(xb); return; }
-    const xo=e.target.closest('[data-exp]'); if(xo){ e.preventDefault(); m.classList.remove('open'); const X=xo.dataset.exp; toast(X==='prog'?`Sample only: ${m.dataset.what}\u2019s progress report would download as a PDF.`:X==='reqs'?`Sample only: ${m.dataset.what}\u2019s outstanding requirements would download as a PDF.`:X==='roi'?`Sample only: ${m.dataset.what}\u2019s ROI and retention graphics would download as images.`:`Sample only: ${m.dataset.what} ${X==='pdf'?'summary would download as a PDF':'data would download as a CSV'}.`); return; }
+    const xo=e.target.closest('[data-exp]'); if(xo){ e.preventDefault(); m.classList.remove('open'); const X=xo.dataset.exp; toast(X==='lfb'?`Sample only: ${m.dataset.what}\u2019s lecture feedback would download as a CSV (date, lecture, speaker, rating, comment).`:X==='prog'?`Sample only: ${m.dataset.what}\u2019s progress report would download as a PDF.`:X==='reqs'?`Sample only: ${m.dataset.what}\u2019s outstanding requirements would download as a PDF.`:X==='roi'?`Sample only: ${m.dataset.what}\u2019s ROI and retention graphics would download as images.`:`Sample only: ${m.dataset.what} ${X==='pdf'?'summary would download as a PDF':'data would download as a CSV'}.`); return; }
     if(!e.target.closest('#expMenu')) m.classList.remove('open'); }
   const mc=e.target.closest('[data-mail]'); if(mc){ e.preventDefault(); e.stopPropagation(); copyMail(mc.dataset.mail,+mc.dataset.id,mc.dataset.ml); return; }
   const aps=e.target.closest('[data-aps]'); if(aps){ const k=aps.dataset.aps; apSort=apSort.k===k?{k,d:-apSort.d}:{k,d:k==='n'||k==='estat'?1:-1}; renderAccTab(); return; }
   const cf=e.target.closest('[data-lcf]'); if(cf){ lcF=cf.dataset.lcf; renderLec(); return; }
   const lp=e.target.closest('[data-lprov]'); if(lp){ e.preventDefault(); const rec=ROSTER.find(r=>r.id===+lp.dataset.lprov); closeLecDrawer(); if(rec) openDrawer(rec,lp.dataset.tab); return; }
   const ls=e.target.closest('[data-lspk]'); if(ls){ e.preventDefault(); const sp=SPEAKERS.find(x=>x.id===+ls.dataset.lspk); closeLecDrawer(); if(sp) openSpkDrawer(sp,'lectures'); return; }
-  const lc=e.target.closest('[data-lec]'); if(lc){ e.preventDefault(); openLecDrawer(lc.dataset.lec,lc.dataset.lf); return; }
+  const lc=e.target.closest('[data-lec]'); if(lc){ e.preventDefault(); openLecDrawer(lc.dataset.lec,lc.dataset.lf,lc.dataset.lp); return; }
   if(e.target.closest('#rangeBtn')){ document.getElementById('rangeMenu').classList.toggle('open'); return; }
   const prg=e.target.closest('[data-prange]'); if(prg){ e.preventDefault(); PAGE_RANGE[current]=prg.dataset.prange||null; document.getElementById('rangeMenu').classList.remove('open'); syncRange(); rerender(); return; }
   if(!e.target.closest('#rangeMenu')) document.getElementById('rangeMenu').classList.remove('open');
@@ -2533,7 +2549,7 @@ document.addEventListener('click', e=>{
   if(current==='admin'&&(admXClick(e)||admClick(e))) return;
   const rt=e.target.closest('[data-radp],[data-radc]'); if(rt){ if(rt.dataset.radp) radP=rt.dataset.radp; if(rt.dataset.radc) radC=rt.dataset.radc; renderOverview(); return; }
   const pb=e.target.closest('[data-pin]'); if(pb){ e.preventDefault(); togglePin(pb); return; }
-  const gp=e.target.closest('[data-gopg]'); if(gp&&!e.target.closest('.tarrow')){ go(gp.dataset.gopg); return; }
+  const gp=e.target.closest('[data-gopg]'); if(gp&&!e.target.closest('.tarrow')){ go(gp.dataset.gopg); return; }   // opens the page unfiltered on purpose (Jamie 11/23): the page's card has its own Filter
   const ar=e.target.closest('.arow[data-id]'); if(ar){ e.preventDefault(); const rec=ROSTER.find(r=>r.id===+ar.dataset.id); if(rec) openDrawer(rec,ar.dataset.tab); return; }
   const tp=e.target.closest('[data-tapick]'); if(tp){ scope[tp.dataset.tapick]=+tp.dataset.v; afterScope(); return; }
   const tc=e.target.closest('[data-taclr]'); if(tc){ scope[tc.dataset.taclr]=null; afterScope(); return; }
@@ -2623,8 +2639,12 @@ function dsynth(x){
   // Not due yet = due point not reached; Late = due and still outstanding (x.req of them); everything else Completed
   const prog=x.estat==='Graduated'?1:Math.max(0,Math.min(0.999,(TODAY-new Date(x.start))/(new Date(x.end)-new Date(x.start))));
   const dueIdx=REQS.map((r,i)=>i).filter(i=>REQS[i][1]<=prog), rq=mulberry32(13000+x.id);
-  const lateIdx=new Set(x.estat==='Graduated'?[]:dueIdx.map(i=>({i,k:rq()})).sort((a,b)=>a.k-b.k).slice(0,x.req).map(o=>o.i));
+  // post-block assessments (Sabrina 11/20, required for CME): when the latest one due is late, it takes one of the provider's late slots
+  // due dates spread evenly across the provider's program dates
+  const ps0=new Date(x.start), ps1=new Date(x.end), pbs=asmts.filter(a=>a.t.startsWith('Post-Block')).slice().reverse().map((a,k,A)=>({t:a.t,d:fmtDate(new Date(ps0.getTime()+(ps1-ps0)*(k+1)/(A.length+1)))})), pbDue=pbs.filter(a=>new Date(a.d)<=TODAY), pbLate=x.estat!=='Graduated'&&x.asmt==='Late'&&x.req>0&&pbDue.length?pbDue[pbDue.length-1]:null;
+  const lateIdx=new Set(x.estat==='Graduated'?[]:dueIdx.map(i=>({i,k:rq()})).sort((a,b)=>a.k-b.k).slice(0,x.req-(pbLate?1:0)).map(o=>o.i));
   const reqList=REQS.map(([it,due],i)=>({it,st:due>prog?'Not due yet':lateIdx.has(i)?'Late':'Completed'}));
+  pbs.forEach(a=>reqList.splice(reqList.findIndex(q=>q.it==='Post-program assessment'),0,{it:'Post-block assessment',blk:a.t.replace('Post-Block · ',''),due:a.d,st:new Date(a.d)>TODAY?'Not due yet':a===pbLate?'Late':'Completed'}));
   // outreach
   const outreach=[];
   if(x.stat==='No-show') outreach.push({d:fmtDate(enrolled),m:'Email',who:'Account coordinator',t:'Never activated',note:'Onboarding no-show, outreach sent'});
@@ -2679,12 +2699,12 @@ const DTAB={
      + confCard(x)
      + `<div class="dcard"><h4>Assessment history</h4>${dtableH([['Date'],['Type'],['Score','r'],['Time','r']],d.asmts.map(a=>[a.d,a.t,a.s,a.m+' min']))}</div>`
      + `<div class="dcard"><h4>Domain proficiency</h4>${dtableH([['Domain'],['Level','r']],d.doms.map(dm=>[dm.d,'L'+dm.lvl]))}</div>`
-     + `<div class="dcard"><h4>Engagement</h4><div class="dstat-row">${dstat(d.lectures,'','Lectures')}${dstat(x.att,'%','Live attendance')}${dstat(x.rec,'','Recordings')}${dstat(x.abs,'','Absences')}${dstat(x.comply,'%','Compliance')}</div></div>`
+     + `<div class="dcard"><h4>Engagement</h4><div class="dstat-row">${dstat(d.lectures,'','Lectures')}${dstat(x.attAll,'%','Attendance')}${dstat(x.att,'%','Live only')}${dstat(x.rec,'','Recordings')}${dstat(x.abs,'','Absences')}${dstat(x.comply,'%','Compliance')}</div></div>`
      + `<div class="dcard"><h4>Rise &amp; Thrive (on-demand)</h4><div class="dstat-row">${dstat(d.rtLect,'','Lectures watched')}${dstat(d.rtSurv,'','Surveys')}${dstat(d.rtMod,'','Modules')}</div></div>`
      + `<div class="dcard"><h4>Lecture attendance</h4>${dtableH([['Date'],['Topic'],['Status','r']],d.lect.map(l=>[l.d,l.t,l.s]))}</div>`
      + `<div class="dcard"><h4>Satisfaction</h4><div class="dstat-row">${dstat(x.rating.toFixed(1),'/5','Program rating')}${dstat(d.responses,'','Responses')}${dstat(d.comments,'','Comments')}</div></div>`
      // same weekly survey history the Watchlist reason points to: not-submitted and low (2 or below) scores stand out
-     + `<div class="dcard"><h4>Weekly feedback surveys</h4>${dtableH([['Date'],['Lecture'],['Speaker'],['Comment'],['Rating','r']],surveyLog(x).map(v=>[v.d,`<a class="lecl" data-lec="${v.lec}"${!v.missed&&v.rating<=LOW_MAX?' data-lf="low"':''}>${v.topic}</a>`,v.spk,v.missed?'<span class="dmuted">No survey submitted</span>':(v.cm||'<span class="dmuted">No comment</span>'),v.missed?pill('Not submitted','lvl-amber'):v.rating]))}</div>`
+     + `<div class="dcard"><h4>Weekly feedback surveys</h4>${dtableH([['Date'],['Lecture'],['Speaker'],['Comment'],['Rating','r']],surveyLog(x).map(v=>[v.d,`<a class="lecl" data-lec="${v.lec}" data-lp="${x.id}"${!v.missed&&v.rating<=LOW_MAX?' data-lf="low"':''}>${v.topic}</a>`,v.spk,v.missed?'<span class="dmuted">No survey submitted</span>':(v.cm||'<span class="dmuted">No comment</span>'),v.missed?pill('Not submitted','lvl-amber'):v.rating]))}</div>`
      + `<div class="dcard"><h4>Performance</h4><div class="drow">${drowF([['wRVUs per day',d.wRVU],['Encounters per day',d.encounters+' <span class="dmuted">vs '+d.encBench+' benchmark</span>']])}</div><div class="drow">${drowF([['Revenue per APP',d.revYr+' / yr'],['Time-to-productivity',d.ttp+' months']])}</div></div>`;
  },
  program(x){ const d=dsynth(x);
@@ -2696,13 +2716,16 @@ const DTAB={
  enrollment(x){ const d=dsynth(x);
    const ended = x.estat==='Graduated'||x.estat==='Transferred'||x.estat==='Incomplete';
    const endVal = x.gradSoon?pill(x.end+' · Graduating soon','lvl-amber'):x.end + (ended?'':` <span class="dmuted">(${x.daysLeft} days left)</span>`);
-   return `<div class="dstat-row fit">${dstatT(x.estat,'Status')}${dstatT(x.standing,'Standing')}${dstat(x.req,'','Requirements left')}</div>`
-     + `<div class="dcard"><h4>Program dates</h4><div class="drow">${drowF([['Start date',x.start],['End date',endVal]])}</div></div>`
+   // Cori's team 11/20: only the very next session and the very next assessment
+   const nx=ended?null:upcomingLecs(x.p,1)[0], na=ended?null:d.reqList.find(q=>q.st==='Not due yet'&&q.blk);
+   const nextUp=ended?'':dcardFields('Next up',[[['Next session',`${shortD(nx.date)} <span class="dmuted">· ${nx.n}</span>`],['Next assessment',na?`${na.due} <span class="dmuted">· Post-block, ${na.blk}</span>`:'<span class="dmuted">None scheduled</span>']]]);
+   return `<div class="dstat-row fit">${dstatT(x.estat,'Status')}${dstatT(x.standing,'Standing'+tipIcon('Watchlist means the provider is on the Watchlist right now: never activated, 4 or more late requirements, a low score, low readiness or missed surveys. Everyone else is in good standing.'))}${dstat(x.req,'','Requirements left')}</div>`
+     + nextUp + `<div class="dcard"><h4>Program dates</h4><div class="drow">${drowF([['Start date',x.start],['End date',endVal]])}</div></div>`
      + (x.stream==='Upskilling'?`<div class="dcard"><h4>Upskilling lifecycle</h4><div class="drow">${drowF([['3-month mark',addDays(x.start,90)],['Status',pill(x.estat,PILLMAP[x.estat]||'lvl-muted')]])}</div><div class="drow">${drowF([['Amount paid',x.paid==='Y'?money(x.fee):'$0 <span class="dmuted">(invoice open)</span>'],['','']])}</div></div>`:'')
      + (x.estat==='Incomplete'?`<div class="dcard"><h4>Drop &amp; credit</h4><div class="drow">${drowF([['Drop date',addDays(x.start,d.dropAfter)],['Credit eligible',d.dropAfter<=30?pill('Yes, dropped in first month','lvl-green'):pill('No','lvl-muted')]])}</div></div>`:'')
      + `<div class="dcard"><h4>Milestones</h4><div class="drow">${drowF([['Exit survey',pill(x.exit,PILLMAP[x.exit]||'lvl-muted')],['Certificate',pill(x.cert,PILLMAP[x.cert]||'lvl-muted')]])}</div><div class="drow">${drowF([['Onboarding',x.stat==='No-show'?pill('Never activated','lvl-red'):pill('Activated','lvl-green')],['Self-enrolled',d.selfEnrolled]])}</div></div>`
      + confCard(x)
-     + `<div class="dcard"><h4>Requirements to graduate</h4>${dtableH([['Requirement'],['Status','r']],d.reqList.map(r=>[r.it, pill(r.st,r.st==='Completed'?'lvl-green':r.st==='Late'?'lvl-amber':'lvl-muted')]))}${x.req?`<div class="dfoot"><span>${x.req} late item${x.req>1?'s':''}</span>${outActs('req',x)}</div>`:''}</div>`
+     + `<div class="dcard"><h4>Requirements to graduate</h4>${dtableH([['Requirement'],['Status','r']],d.reqList.map(r=>[r.blk?`${r.it}<div class="wsub">${r.blk}, due ${r.due}</div>`:r.it, pill(r.st,r.st==='Completed'?'lvl-green':r.st==='Late'?'lvl-amber':'lvl-muted')]))}${x.req?`<div class="dfoot"><span>${x.req} late item${x.req>1?'s':''}</span>${outActs('req',x)}</div>`:''}</div>`
      ;
  },
  // outreach: watch status, the copyable email, and the full log by person (from HubSpot)
@@ -2755,7 +2778,7 @@ function asynth(a){ if(a._d) return a._d;
     cadence:rp(['Annual','Quarterly']), multiYear:term>1?'Yes':'No', flexible:rng()<0.5?'Yes':'No',
     ttpSeats,upSeats,slSeats,ttpReg,upReg,slReg,priceTTP,priceUp,priceSL,ttpVal,upVal,slVal,
     ageRows, mix, appsReported, appsBonfire, icp:rp(['Gold','Silver','Bronze']), reason, fourMo:rint(30,55) };
-  const d=a._d; d.nineMo=Math.min(100,d.fourMo+rint(32,52)); d.lastLogin=rint(0,34); d.logins30=rint(0,26);
+  const d=a._d; d.nineMo=Math.min(100,d.fourMo+rint(32,52)); d.lastLogin=rint(0,34); d.logins30=rint(0,26); { const q=mulberry32(43000+a.id); d.leader=['Dr. ','',''][Math.floor(q()*3)]+FIRST[Math.floor(q()*FIRST.length)]+' '+LAST[Math.floor(q()*LAST.length)]; d.leaders=1+Math.floor(q()*4); }
   d.pctDone=Math.max(3,Math.min(99,Math.round(((d.curYear-1)*365+Math.max(0,365-Math.min(365,a.daysToRenewal==null?0:a.daysToRenewal)))/(d.term*365)*100))); if(a.status==='Inactive') d.pctDone=100;
   d.pendCredit=rint(0,Math.max(1,Math.round(a.seatsContracted*0.14))); d.hub=a.seatsRegistered; d.tiq=d.hub-(rng()<0.22?1:0); d.fin=d.hub-(rng()<0.3?rint(1,2):0); d.dupes=rng()<0.3?rint(1,3):0;
   d.ret=rint(80,97); d.retQ=[3,2,1,0].map(q=>Math.max(70,Math.min(99,d.ret-q*rint(0,2)+(q?rint(-2,2):0)))); d.grads=ROSTER.filter(x=>x.o===a.id&&x.estat==='Graduated').length;
@@ -2779,13 +2802,13 @@ function accProviders(accId){ const all=ROSTER.filter(x=>x.o===accId);
 }
 function expCard(a){ if(a.status!=='Active') return ''; ensureActive(); const d=asynth(a), head=Math.max(0,d.appsBonfire-a.active);
   const ns=a.offered.filter(x=>!a.lines.includes(x)), np=PRODUCTS.filter(p=>!a.products.includes(p));
-  return `<div class="dcard"><h4>Expansion</h4><div class="dstat-row">${dstat(d.appsBonfire,'','APPs (Bonfire)')}${dstat(a.active,'','Enrolled')}${dstat(head,'','Not enrolled')}</div>`
+  return `<div class="dcard"><h4>Expansion</h4><div class="dstat-row">${dstat(d.appsBonfire,'','APPs (Bonfire)')}${dstat(a.active,'','Enrolled now, not graduates')}${dstat(head,'','Not enrolled')}</div>`
     + `<div class="drow">${drowF([['Service lines not served',ns.length?ns.join(', '):'None'],['Products not purchased',np.length?np.join(', '):'None']])}</div>`
     + (a.fillPct>=90&&head>0?`<div class="drow">${drowF([['More TTP seats',`${a.fillPct}% filled, with ${head} APPs not enrolled`],['','']])}</div>`:'')+`</div>`; }
 const ATAB={
  profile(a){ ensureActive(); const d=asynth(a); const [rt,rc]=RISKMAP[a.risk];
    return `<div class="dstat-row fit">${dstatT(rt,a.status==='Inactive'?'Status':'Renewal risk')}${dstat(a.fillPct,'%','Contract fill')}${dstat(a.seatsRegistered+' / '+a.seatsContracted,'','Seats reg / contracted')}${a.status==='Inactive'?dstatT(a.endTxt,'Contract ended'):dstat(a.daysToRenewal,' d','To renewal')}</div>`
-   + dcardFields('Account',[[['Account owner',a.owner],['Coordinator',d.coordinator]],[['# APPs (client reported)',d.appsReported],['# APPs (Bonfire)',d.appsBonfire]],[['ICP tier',d.icp],['Current contract value',money(a.contractValue)]],[['Employer NPS',a.enps+' <span class="dmuted">vs '+avg(ACCOUNTS,'enps')+' all employers</span>'],['Last login',(d.lastLogin===0?'Today':d.lastLogin+' days ago')+' <span class="dmuted">· '+d.logins30+' logins in 30 days</span>']]].concat(a.status==='Active'?[[['Last business review',a.lastReview+' days ago'+(a.lastReview>a.reviewEvery[0]?' '+pill('Overdue','lvl-amber'):'')],['Review cadence',a.reviewEvery[1]+' <span class="dmuted">('+a.icp+' tier)</span>']]]:[]))
+   + dcardFields('Account',[[['Account owner',a.owner],['Coordinator',d.coordinator]],[['# APPs (client reported)',d.appsReported],['# APPs (Bonfire)',d.appsBonfire]],[['ICP tier',d.icp],['Current contract value',money(a.contractValue)]],[['Employer NPS',a.enps+' <span class="dmuted">vs '+avg(ACCOUNTS,'enps')+' all employers</span>'],['Client leader login (ThriveIQ)',(d.lastLogin===0?'Today':d.lastLogin+' days ago')+', '+d.leader+' <span class="dmuted">· '+d.logins30+' logins in 30 days by '+d.leaders+(d.leaders===1?' leader':' leaders')+'</span>']]].concat(a.status==='Active'?[[['Last business review',a.lastReview+' days ago'+(a.lastReview>a.reviewEvery[0]?' '+pill('Overdue','lvl-amber'):'')],['Review cadence',a.reviewEvery[1]+' <span class="dmuted">('+a.icp+' tier)</span>']]]:[]))
    + dcardFields('Contract summary',[[['Contract term',d.term+(d.term>1?' years':' year')],['Current contract year','Year '+d.curYear]],[['Renewal date',d.renew],['Invoice cadence',d.cadence]],[['Contract completed',d.pctDone+'% <span class="dmuted">of the '+d.term+'-year term</span>'],['Client tenure',tenure(a)]],[['Fulfillment pace',a.pace?pill(a.pace,a.pace==='Behind'?'lvl-amber':'lvl-muted')+` <span class="dmuted">${a.fillPct}% filled at month ${a.paceMo}, ${a.paceExp}% expected</span>`:'<span class="dmuted">Contract ended</span>'],['','']]])
    + expCard(a)
    + `<div class="dcard"><h4>Retention</h4><div class="dstat-row">${dstat(d.ret,'%','Retention (12 mo)')}${dstat(100-d.ret,'%','Turnover')}${dstat(moneyC(Math.max(0,(d.ret-85)/100)*d.grads*120000),'','Turnover savings')}</div><div class="drow">${drowF([['Trend, last 4 quarters',d.retQ.map(v=>v+'%').join(' → ')],['Benchmark','85% (SullivanCotter)']])}</div></div>`
@@ -2932,7 +2955,8 @@ const PTAB={
    + dcardFields('Program',[[['Subject',pg.subject],['Faculty',pg.faculty]],[['Cohort',pg.full],['Class day',pg.day+' '+pg.per]],[['Times',pg.tz],['','']]])
    + `<div class="dcard"><h4>Program growth</h4>${dtableH([['Quarter'],['Participants','r']],['Q4 2025','Q1 2026','Q2 2026','Q3 2026'].map((q,i)=>[q,d.growthQ[i]]))}<div class="dfoot"><span>Year over year</span><b>${dir(d.yoy,(d.yoy>=0?'Up':'Down')+' '+Math.abs(d.yoy)+'%')}</b></div></div>`
    + (()=>{ const rec=LECTURES.filter(L=>L.p===pg.id).sort((a,b)=>b.dt-a.dt).slice(0,20);
-       return `<div class="dcard"><h4>Recent lectures</h4>${dtableH([['Date'],['Lecture'],['Speaker'],['Rating','r'],['Low scores','r']],rec.map(L=>[shortD(L.date),`<a class="lecl" data-lec="${L.id}">${L.n}</a>`,L.spkN,L.rating.toFixed(1),L.low?`<a class="lecl plain" data-lec="${L.id}" data-lf="low">${L.low}</a>`:'0']))}</div>`; })();
+       const up=upcomingLecs(pg.id,4);
+       return `<div class="dcard"><h4>Upcoming lectures</h4>${dtableH([['Date'],['Lecture'],['Speaker'],['Type']],up.map(L=>[shortD(L.date),L.n,L.spkN,L.type==='Didactic'?'Didactic':'Prof. development']))}</div><div class="dcard"><h4>Recent lectures</h4>${dtableH([['Date'],['Lecture'],['Speaker'],['Rating','r'],['Low scores','r']],rec.map(L=>[shortD(L.date),`<a class="lecl" data-lec="${L.id}">${L.n}</a>`,L.spkN,L.rating.toFixed(1),L.low?`<a class="lecl plain" data-lec="${L.id}" data-lf="low">${L.low}</a>`:'0']))}</div>`; })();
  },
  outcomes(pg){ const d=psynth(pg); const bs=d.benchmark>=0?'+':'';
    return `<div class="dstat-row fit tight">${dstat(pg.comp,'%','Avg completion')}${pg.lift==null?dstatT('Too few','Pre/post lift'):dstat('+'+pg.lift,'%','Pre/post lift')}${pg.confLift==null?dstatT('Too few','Confidence lift'):dstat('+'+pg.confLift,'%'+tgt('35%'),'Confidence lift')}${dstat(pg.nps,tgt('55'),'Enrollee NPS')}${dstat(pg.retention,'%'+tgt('95%'),'Retention 12 mo')}</div>`
@@ -3112,6 +3136,9 @@ const LEC_CACHE={};
 function lecOf(p,i){ const k=p*100+i; if(LEC_CACHE[k]) return LEC_CACHE[k];
   const r=mulberry32(19500+k), pd=(i+p)%4===1, sub=PROGS[p].subject, pool=SPEAKERS.filter(sp=>sp.progs.includes(sub)), sps=pool.length?pool:SPEAKERS;
   return LEC_CACHE[k]={topic:pd?PD_TOPICS[(p+i)%PD_TOPICS.length]:SURVEY_TOPICS[(p*3+i)%SURVEY_TOPICS.length],type:pd?'Professional development':'Didactic',spk:sps[Math.floor(r()*sps.length)]}; }
+// upcoming lectures: the next class days on the program's schedule (Lauren 11/20; HubSpot holds schedules from mid-December)
+function upcomingLecs(p,n){ const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'], d=new Date(TODAY); d.setHours(12,0,0,0); d.setDate(d.getDate()+1); while(DAYS[d.getDay()]!==PROGS[p].day) d.setDate(d.getDate()+1);
+  return Array.from({length:n},(_,k)=>{ const L=lecOf(p,8+k), dt=new Date(d); dt.setDate(dt.getDate()+7*k); return {date:dt,n:L.topic,type:L.type,spkN:L.spk.n}; }); }
 let LECTURES=[];
 function buildLectures(){ LECTURES=[];
   PROGS.forEach((pg,p)=>{ const R=ROSTER.filter(x=>x.p===p);
@@ -3148,12 +3175,15 @@ function renderLec(){ const L=lcRec, got=L.list.filter(o=>!o.v.missed);
   // every response with a comment, lowest scores first (low scores always carry a comment)
   const rows=got.filter(o=>o.v.cm).sort((a,b)=>a.v.rating-b.v.rating).map(({x,v})=>[`<a class="lecl" data-lprov="${x.id}" data-tab="outcomes">${x.n}</a><div class="wsub">${ORGS[x.o]}</div>`,v.rating,v.cm||'<span class="dmuted">No comment</span>',v.rating<=LOW_MAX?lowActs(x,L):'']);
   document.getElementById('lecBody').innerHTML=`<div class="dstat-row">${dstat(L.rating.toFixed(1),'/5','Avg rating')}${dstat(L.resp+' / '+L.exp,'','Responses')}${dstat(L.low,'','Low scores')}${dstat(L.com,'','Comments')}</div>`
+    + (()=>{ const me=lcP!=null&&L.list.find(o=>o.x.id===lcP); if(!me) return ''; const v=me.v;   // Ryan 11/20: from a provider, their own response leads
+        return `<div class="dcard"><h4>${me.x.n}\u2019s response</h4><div class="drow">${drowF([['Rating',v.missed?pill('Not submitted','lvl-amber'):v.rating+'<span class="dmuted"> / 5</span>'],['Comment',v.missed?'<span class="dmuted">No survey submitted</span>':(v.cm||'<span class="dmuted">No comment</span>')]])}</div></div>`; })()
     + dcardFields('Lecture',[[['Program',PROGS[L.p].full],['Date',fmtDate(L.date)]],[['Speaker',`<a class="lecl" data-lspk="${L.spk.id}">${L.spkN}</a>`],['Type',L.type]]])
     + `<div class="dcard"><h4>Rating distribution</h4><div class="lbars">${bars}</div></div>`
-    + `<div class="dcard"><h4>Responses with comments (${rows.length})</h4>${rows.length?dtableH([['Provider'],['Rating','r'],['Comment'],['Outreach','r']],rows):'<div class="dnote" style="margin:14px 18px;">No responses in this group.</div>'}</div>`
+    + `<div class="dcard"><h4>${lcP!=null?'All attendees\u2019 comments':'Responses with comments'} (${rows.length})</h4>${rows.length?dtableH([['Provider'],['Rating','r'],['Comment'],['Outreach','r']],rows):'<div class="dnote" style="margin:14px 18px;">No responses in this group.</div>'}</div>`
     + `<div class="dnote">${L.exp-L.resp} provider${L.exp-L.resp===1?'':'s'} didn't submit this survey.</div>`;
   document.getElementById('lecBody').scrollTop=0; }
-function openLecDrawer(id,f){ const L=LECTURES.find(l=>l.id===id); if(!L) return; closeDrawer(); closeSpkDrawer(); closeProgDrawer(); closeAccDrawer(); lcRec=L; lcF=f||'all';
+let lcP=null;
+function openLecDrawer(id,f,lp){ const L=LECTURES.find(l=>l.id===id); if(!L) return; closeDrawer(); closeSpkDrawer(); closeProgDrawer(); closeAccDrawer(); lcRec=L; lcF=f||'all'; lcP=lp!=null?+lp:null;
   document.getElementById('lcName').textContent=L.n; document.getElementById('lcSub').innerHTML=PROGS[L.p].short+' &middot; '+fmtDate(L.date)+' &middot; '+L.spkN;
   renderLec(); lecScrim.classList.add('open'); lecDrawer.classList.add('open'); lecDrawer.setAttribute('aria-hidden','false'); }
 function closeLecDrawer(){ lecScrim.classList.remove('open'); lecDrawer.classList.remove('open'); lecDrawer.setAttribute('aria-hidden','true'); }
@@ -3248,7 +3278,7 @@ function feedbackFlag(x){ const recent=surveyLog(x).slice(0,4), missed=recent.fi
   if(low) return {reason:'Low feedback score: '+low.rating+'/5',detail:low.topic+' with '+low.spk+' ('+low.d+')',date:low.date};
   return null; }
 // sample mix for the prototype: a fixed number per reason so every reason shows (low or missing feedback is the most common, Jamie 11/4)
-const WATCH_QUOTA={'Missed surveys':4,'Low feedback score':7,'Low assessment score':3,'No-show':2,'Low readiness':1,'Requirements':1,'Attendance':0};
+const WATCH_QUOTA={'Missed surveys':4,'Low feedback score':7,'Low assessment score':3,'No-show':4,'Low readiness':1,'Requirements':3,'Attendance':0};
 function initWatch(){
   WATCH={}; const cand=[];
   ROSTER.forEach(x=>{
@@ -3267,6 +3297,9 @@ function initWatch(){
     else return;
     cand.push({x,reason,detail,cat,score,asD,fbf,k:mulberry32(9100+x.id)()}); });
   const pickd=[]; Object.keys(WATCH_QUOTA).forEach(c=>pickd.push(...cand.filter(o=>o.cat===c).sort((a,b)=>a.k-b.k).slice(0,WATCH_QUOTA[c])));
+  // Sabrina 11/20: standing follows the Watchlist, so anyone who meets a Watchlist rule must be on it. The prototype keeps a small fixed sample,
+  // so candidates left out of the sample are evened out: never-activated ones activated, and late requirements trimmed under the rule
+  const inS=new Set(pickd.map(o=>o.x.id)); cand.forEach(({x})=>{ if(inS.has(x.id)) return; let ch=false; if(x.stat==='No-show'){ x.stat='Active'; ch=true; } if(x.req>=4){ x.req=3; ch=true; } if(ch) delete x._d; });
   pickd.forEach(({x,reason,detail,cat,score,asD,fbf})=>{
     // on watch since the triggering survey (feedback reasons) or a recent flag; any outreach happens after that
     const rng=mulberry32(6000+x.id), dayMs=864e5;
