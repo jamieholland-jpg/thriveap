@@ -186,6 +186,10 @@
   .count-pill b{font-weight:700;}
   .row-4 .kpi-main{justify-content:flex-start; gap:13px; align-items:center;}
   .tarrow{font-size:30px; line-height:1;}
+  a.ppl1{text-decoration:none;} a.ppl1 .lvl{cursor:pointer; text-decoration:underline; text-underline-offset:2px;}
+  a.orgsel.hsbtn{text-decoration:none; display:inline-flex; align-items:center; justify-content:center; padding-left:10px; padding-right:10px; color:var(--muted); align-self:stretch; box-sizing:border-box;}
+  a.orgsel.hsbtn:hover{color:var(--ink, inherit);}
+  a.orgsel.hsbtn svg{width:16px; height:16px;}
   .tarrow.up{color:var(--green);}
   .tarrow.steady{color:var(--amber);}
   .tarrow.down{color:var(--red);}
@@ -1098,7 +1102,7 @@ html,body{overflow-x:hidden;}
   <aside class="drawer" id="drawer" aria-hidden="true">
     <div class="drawer-head">
       <div class="dh-id"><div class="dh-name" id="drName">Provider</div><div class="dh-sub" id="drSub"></div></div>
-      <div class="dh-actions"><button class="orgsel exportbtn" id="drExport">Export <span class="arr-d">↓</span></button><button class="drawer-close" id="drawerClose" aria-label="Close">&#10005;</button></div>
+      <div class="dh-actions"><a class="orgsel hsbtn" id="drHub" href="https://www.hubspot.com" target="_blank" rel="noopener" data-tip="Open in HubSpot" aria-label="Open this provider in HubSpot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="15" cy="14.5" r="3.8"/><path d="M15 10.7V6.6"/><circle cx="15" cy="4.6" r="1.6"/><path d="M11.8 12.5 6.2 8.6"/><circle cx="4.6" cy="7.5" r="1.6"/><path d="M12.3 17.2 8.9 20.2"/><circle cx="7.6" cy="21" r="0.9"/></svg></a><button class="orgsel exportbtn" id="drExport">Export <span class="arr-d">↓</span></button><button class="drawer-close" id="drawerClose" aria-label="Close">&#10005;</button></div>
     </div>
     <div class="drawer-tabs" id="drawerTabs">
       <a href="#" data-dtab="profile" class="active">Profile</a>
@@ -1343,17 +1347,19 @@ const TRACKS=[...new Set(ROSTER.map(x=>x.stream))];
 
 let scope={client:null,ac:null,track:null,subject:null,cohort:null,faculty:null,range:null};
 // date range: providers active at any point in the period. "This" periods run through today; "Last" periods are the full previous period
+// Today and Yesterday are Sales & Marketing only, for the daily standup (Jonas 11/24); kept apart so other pages' range lists don't change
+const DAY_RANGES={yday:'Yesterday',today:'Today'}, isDay=r=>r==='today'||r==='yday';
 const RANGES={lweek:'Last week',week:'This week',lmonth:'Last month',month:'This month',lquarter:'Last quarter',quarter:'This quarter',lyear:'Last year',year:'This year'};
 // Sales & Marketing counts weeks as work weeks (Mon to Fri)
 const isWorkWeek=r=>current==='sales-marketing'&&(r==='week'||r==='lweek');
 // page-level date range for Programs, Clients, Speakers, Finance, Sales & Marketing (null = all time)
 const PAGE_RANGE={'program-health':null,clients:null,speakers:null,feedback:'lweek',finance:'lmonth','sales-marketing':'month'};
 const ALL_DAYS=730;   // sample history: two years
-const rangeDays=r=>{ if(!r) return ALL_DAYS; const n=Math.round((rangeEnd(r)-rangeStart(r))/864e5)+1; return isWorkWeek(r)?Math.min(5,n):n; };
+const rangeDays=r=>{ if(!r) return ALL_DAYS; if(isDay(r)) return 1; const n=Math.round((rangeEnd(r)-rangeStart(r))/864e5)+1; return isWorkWeek(r)?Math.min(5,n):n; };
 // month-end closes (Jim's wish list, 11/10): 'c1' is last month's close, 'c2' the one before, and so on. Picking one shows that month frozen as it was reported
 const isClose=r=>!!r&&r[0]==='c', CLOSES=Array.from({length:13},(_,i)=>'c'+(i+1));   // capped at 13 months of closes (Brandi 11/17)
 const closeMonth=r=>new Date(TODAY.getFullYear(),TODAY.getMonth()-(+r.slice(1)),1);
-const rangeLbl=r=>!r?'All time':isClose(r)?closeMonth(r).toLocaleString('en-US',{month:'long',year:'numeric'})+' close':isWorkWeek(r)?RANGES[r].replace('week','work week'):RANGES[r];
+const rangeLbl=r=>!r?'All time':isClose(r)?closeMonth(r).toLocaleString('en-US',{month:'long',year:'numeric'})+' close':isWorkWeek(r)?RANGES[r].replace('week','work week'):(RANGES[r]||DAY_RANGES[r]);
 // last month's close seeds like Last month, so the two differ only where numbers changed after the close
 const seedR=r=>r==='c1'?'lmonth':r;
 // range labels inside sentences: lowercase "last month", but keep month names capitalized ("October 2026 close")
@@ -1365,14 +1371,14 @@ function inRange(v,baseDays,key){ const x=v*rangeDays(curRange())/baseDays, f=Ma
 const wob=(key,amp)=>curRange()?(mulberry32(strSeed(key+'|'+seedR(curRange())))()*2-1)*amp:0;
 const activeIn=(x,r)=>!r||(new Date(x.start)<=rangeEnd(r)&&new Date(x.end)>=rangeStart(r));
 let VIEW_ROWS={};
-function rangeStart(r){ if(isClose(r)) return closeMonth(r); const last=r[0]==='l', b=last?r.slice(1):r; const d=new Date(TODAY); d.setHours(0,0,0,0);
+function rangeStart(r){ if(isClose(r)) return closeMonth(r); if(isDay(r)){ const t=new Date(TODAY); t.setHours(0,0,0,0); if(r==='yday') t.setDate(t.getDate()-1); return t; } const last=r[0]==='l', b=last?r.slice(1):r; const d=new Date(TODAY); d.setHours(0,0,0,0);
   if(b==='week'){ const dow=(d.getDay()+6)%7; d.setDate(d.getDate()-dow-(last?7:0)); }
   else if(b==='month'){ d.setDate(1); if(last) d.setMonth(d.getMonth()-1); }
   else if(b==='quarter'){ d.setMonth(Math.floor(d.getMonth()/3)*3,1); if(last) d.setMonth(d.getMonth()-3); }
   else if(b==='year'){ d.setMonth(0,1); if(last) d.setFullYear(d.getFullYear()-1); }
   return d; }
 // "This" periods end today; "Last" periods end the day before the current period starts
-function rangeEnd(r){ if(isClose(r)){ const m=closeMonth(r); return new Date(m.getFullYear(),m.getMonth()+1,0); } if(r[0]!=='l') return new Date(TODAY); const d=rangeStart(r.slice(1)); d.setDate(d.getDate()-1); return d; }
+function rangeEnd(r){ if(r==='yday') return rangeStart('yday'); if(isClose(r)){ const m=closeMonth(r); return new Date(m.getFullYear(),m.getMonth()+1,0); } if(r[0]!=='l') return new Date(TODAY); const d=rangeStart(r.slice(1)); d.setDate(d.getDate()-1); return d; }
 let sort={key:null,dir:1};
 let search="";
 let finRev='prog', finTop='clients', finBook='enr', finAR='open', smBook='product', smEnr='program', smDeals='channel';
@@ -1586,7 +1592,7 @@ function cell(x,c){
     case 'blocks': return `<td class="num">${x.blocks}<span class="u">/${x.blocksTot}</span></td>`;
     case 'money': return `<td class="num">$${x[key].toLocaleString()}</td>`;
     case 'num': return `<td class="num">${x[key]}</td>`;
-    case 'reqacts': return `<td>${x.req?outActs('req',x):''}</td>`;
+    case 'reqacts': return `<td>${x.req?outActs('req',x):`<div class="wacts"><span class="mailcp" style="visibility:hidden" aria-hidden="true">${MAIL}</span><a class="mailcp" href="https://www.hubspot.com" target="_blank" rel="noopener" data-tip="Open in HubSpot" aria-label="Open this provider in HubSpot">${LOGI}</a></div>`}</td>`;
     case 'stream': return `<td>${pill(x.stream,'lvl-muted')}</td>`;
     case 'paidpill': return `<td>${x.paid==='Y'?pill('Paid','lvl-green'):pill('Unpaid','lvl-red')}</td>`;
     case 'asmt': case 'status': case 'exit': case 'cert': return `<td>${pill(x[key],PILLMAP[x[key]]||'lvl-muted')}</td>`;
@@ -2155,43 +2161,47 @@ function renderSalesMarketing(){
   // everything here is a period number for the page date range (sample rates: month and quarter observed over 28 days, year over 301); weeks are work weeks
   const RL=rangeLbl(curRange()), n=(v,base,key)=>inRange(v,base,'sm'+key), $=(v,base,key)=>moneyC(n(v,base,key));
   const pl=(c,w)=>c+' '+w+(c===1?'':'s');
+  // every number gets a trend arrow (Jonas 11/24). The comparison follows the date range: the same period before, and quarters vs the same quarter last year (his example)
+  const rg=curRange(), CMP=({today:'vs yesterday',yday:'vs the day before',week:'vs the same days last work week',lweek:'vs the work week before',month:'vs the same days last month',lmonth:'vs the month before',quarter:'vs this quarter last year',lquarter:'vs the same quarter last year',year:'vs this point last year',lyear:'vs the year before'})[rg]||'vs last year';
+  const SINCE=({today:'since yesterday',yday:'over yesterday',week:'since Monday',lweek:'over last work week',month:'since the 1st',lmonth:'over last month',quarter:'since the quarter began',lquarter:'over last quarter',year:'since January 1',lyear:'over last year'})[rg]||'over the last year';
+  const smD=key=>Math.round((mulberry32(strSeed('smd'+key+'|'+(rg||'all')))()*2-0.7)*14);
+  const arr=(key,lowerBetter)=>{ const v=smD(key), flat=Math.abs(v)<1, good=(v>=0)!==!!lowerBetter;
+    return `<span class="tarrow mom ${flat?'steady':good?'up':'down'}" data-tip="${flat?'Roughly flat '+CMP:(v>=0?'Up ':'Down ')+Math.abs(v)+'% '+CMP}" tabindex="0">${flat?'\u25B6':v>=0?'\u25B2':'\u25BC'}</span>`; };
   // deals created by channel (tester feedback 11/4); the tile totals the channels so the two always agree
   const CH=[['MQL',12,520000],['Tradeshows',7,310000],['Pablo',5,260000],['LinkedIn',4,140000],['Other',4,170000]].map(([c,k,v],i)=>{ const cnt=n(k,28,'ch'+i); return [c,cnt,cnt?n(v,28,'cv'+i):0]; });
   const dc=CH.reduce((t,c)=>t+c[1],0), dv=CH.reduce((t,c)=>t+c[2],0);
   const mqls=n(146,28,'mql'), m2d=Math.round(22+wob('m2d',4));
   // bylines give the dollars behind each headline; new bookings' arrow and byline share one change so they always agree
-  const bvp=Math.round(87+wob('bvp',5)), plan=n(1.7e6,28,'plan'), nb=n(1.2e6,28,'nb'), nbChg=12;
-  const tiles=[['Bookings vs plan',bvp,'%',false,'Booked revenue against plan for the period.',null,moneyC(plan*bvp/100)+' of '+moneyC(plan)+' plan'],
+  const bvp=Math.round(87+wob('bvp',5)), plan=n(1.7e6,28,'plan'), nb=n(1.2e6,28,'nb'), nbChg=12, pipeChg=smD('pipe');
+  const tiles=[['Bookings vs plan',bvp,'%',false,'Booked revenue against plan for the period.',CMP,moneyC(plan*bvp/100)+' of '+moneyC(plan)+' plan',smD('bvp')],
     ['New bookings',moneyC(nb),'',false,null,'vs same period last year',moneyC(nb/(1+nbChg/100))+' this time last year',nbChg],
-    ['Pipeline (next 12 mo)','$8.4M','',true,'New and existing logos.','since Monday last week','+6% since last Monday',6],
-    ['MQLs',mqls,'',false,null,'vs prior month',m2d+'% became deals'],
-    ['Deals created',dc,'',false,null,'vs last month',moneyC(dv)+' total value']].map(t=>tile(...t)).join('');
-  const pr=(nm,c,v)=>`<div class="prow"><div><div class="pn">${nm}</div>${c?`<div class="pc">${c}</div>`:''}</div><div class="pctv">${v}</div></div>`;
+    ['Pipeline (next 12 mo)','$8.4M','',true,'New and existing logos.',SINCE,(pipeChg>=0?'+':'\u2212')+Math.abs(pipeChg)+'% '+SINCE,pipeChg],
+    ['MQLs',mqls,'',false,null,CMP,m2d+'% became deals',smD('mql')],
+    ['Deals created',dc,'',false,null,CMP,moneyC(dv)+' total value',dc?smD('dc'):0]].map(t=>tile(...t)).join('');
+  const pr=(nm,c,v,a)=>`<div class="prow"><div><div class="pn">${nm}</div>${c?`<div class="pc">${c}</div>`:''}</div><div class="pctv">${v}${a||''}</div></div>`;
   const seg=(attr,cur,opts)=>`<div class="segtab">${opts.map(([k,l])=>`<button class="seg ${cur===k?'on':''}" data-${attr}="${k}">${l}</button>`).join('')}</div>`;
   const head=(t,attr,cur,opts)=>`<div class="pthead"><h3 class="serif">${t}</h3>${seg(attr,cur,opts)}</div>`;
   const sales=`<div class="card prog"><h3 class="serif">Sales &amp; growth</h3>
-    ${pr('New vs existing bookings','Share of new business, '+rlLow(RL),Math.round(62+wob('nve',5))+'% new')}
-    ${pr('Contracts renewed vs target',RL,n(14,28,'cr')+' / '+n(18,28,'crt'))}
-    ${pr('Registrations vs contracted','Active contracts, as of today',sumOf(ACCOUNTS,'seatsRegistered').toLocaleString()+' / '+sumOf(ACCOUNTS,'seatsContracted').toLocaleString())}</div>`;
+    ${pr('New vs existing bookings','Share of new business, '+rlLow(RL),Math.round(62+wob('nve',5))+'% new',arr('nve'))}
+    ${pr('Contracts renewed vs target',RL,n(14,28,'cr')+' / '+n(18,28,'crt'),arr('cr'))}
+    ${pr('Registrations vs contracted','Active contracts, as of today',sumOf(ACCOUNTS,'seatsRegistered').toLocaleString()+' / '+sumOf(ACCOUNTS,'seatsContracted').toLocaleString(),arr('reg'))}</div>`;
   const BOOK={product:[['TTP',RL+' vs budget',$(3.1e6,301,'bT')+' / '+$(3.4e6,301,'bbT')],['Upskilling',RL+' vs budget',$(612000,301,'bU')+' / '+$(700000,301,'bbU')],['Skills Lab',RL+' vs budget',$(148000,301,'bS')+' / '+$(180000,301,'bbS')]],
     target:[['Existing TTP business',RL+' vs target',n(112,28,'tT')+' / '+n(120,28,'ttT')],['Existing Upskilling business',RL+' vs target',n(31,28,'tU')+' / '+n(35,28,'ttU')],['Skills Lab purchases',RL+' vs target',n(14,301,'tS')+' / '+n(20,301,'ttS')]]};
-  const book=`<div class="card prog">${head('Bookings vs plan','smbook',smBook,[['product','By product'],['target','Vs target']])}${BOOK[smBook].map(r=>pr(...r)).join('')}</div>`;
+  const book=`<div class="card prog">${head('Bookings vs plan','smbook',smBook,[['product','By product'],['target','Vs target']])}${BOOK[smBook].map(r=>pr(...r,arr('bk'+r[0]))).join('')}</div>`;
   const ENR={program:SUBJECTS.slice(0,5).map((sub,i)=>[sub,'New vs existing clients',n([18,14,11,9,6][i],28,'en'+i)+' new · '+n([9,11,6,7,5][i],28,'ee'+i)+' existing']),
     type:[['New Door','New client, first contract',n(34,28,'ty0')],['National','National accounts',n(12,28,'ty1')],['Add-On','More seats on an existing contract',n(20,28,'ty2')],['Renewal','Renewed contracts',n(41,28,'ty3')]]};
-  const enr=`<div class="card prog">${head('Enrollments','smenr',smEnr,[['program','By program'],['type','By type']])}${ENR[smEnr].map(r=>pr(...r)).join('')}</div>`;
+  const enr=`<div class="card prog">${head('Enrollments','smenr',smEnr,[['program','By program'],['type','By type']])}${ENR[smEnr].map(r=>pr(...r,arr('en'+r[0]))).join('')}</div>`;
   const lost=(rows,base,word,key)=>rows.map(([why,c,v],i)=>{ const k=n(c,base,key+'c'+i); return [why,pl(k,word)+', '+rlLow(RL),k?$(v,base,key+'v'+i):'$0']; });
   const DEALS={channel:CH.map(([c,k,v])=>[c,pl(k,'deal')+', '+rlLow(RL),moneyC(v)]),
     rep:AES.slice(0,5).map((nm,i)=>[nm,'Deals created, '+rlLow(RL),n([9,7,6,6,4][i],28,'rep'+i)]),
     lostdeals:lost([['Budget or timing',3,35000],['Chose a competitor',2,28000],['No decision',2,14000],['Pricing',1,8000]],28,'deal','ld'),
     lostsites:lost([['Budget cuts',4,210000],['Chose a competitor',3,140000],['Low provider engagement',2,95000],['Leadership change',2,60000]],301,'site','ls')};
-  const deals=`<div class="card prog">${head('Deals','smdeals',smDeals,[['channel','By channel'],['rep','By rep'],['lostdeals','Lost deals'],['lostsites','Lost sites']])}${DEALS[smDeals].map(r=>pr(...r)).join('')}</div>`;
-  // month-over-month change for the social rows (sample)
-  const mom=key=>{ const v=Math.round((mulberry32(strSeed('mom'+key))()*2-0.7)*14); return `<span class="tarrow mom ${v>=0?'up':'down'}" data-tip="${v>=0?'Up':'Down'} ${Math.abs(v)}% vs last month" tabindex="0">${v>=0?'▲':'▼'}</span>`; };
+  const deals=`<div class="card prog">${head('Deals','smdeals',smDeals,[['channel','By channel'],['rep','By rep'],['lostdeals','Lost deals'],['lostsites','Lost sites']])}${DEALS[smDeals].map(r=>pr(...r,arr('dl'+smDeals+r[0],/^lost/.test(smDeals)))).join('')}</div>`;
   const chRows=[['Website','Unique visitors',n(28400,28,'uv').toLocaleString()],['Website','Avg visit duration','2m 41s'],['Social','New followers',n(318,28,'nf')],
-    ['Social','Posts',n(42,28,'sp')+mom('p')],['Social','Reposts',n(118,28,'sr')+mom('r')],['Social','Likes',n(2310,28,'sl').toLocaleString()+mom('l')],
+    ['Social','Posts',n(42,28,'sp')],['Social','Reposts',n(118,28,'sr')],['Social','Likes',n(2310,28,'sl').toLocaleString()],
     ['Upskilling (B2B2C)','Purchases, running total',n(64,28,'bu')],['Alumni','Purchases, running total',n(38,28,'al')],['Async / B2C','Enrollment growth','+14%']];
   const channels=`<div class="card prog"><h3 class="serif">Marketing channels</h3>
-    ${chRows.map(r=>`<div class="prow"><div><div class="pn">${r[0]} <span style="color:var(--muted);font-weight:500;">${r[1]}</span></div></div><div class="pctv">${r[2]}</div></div>`).join('')}</div>`;
+    ${chRows.map(r=>`<div class="prow"><div><div class="pn">${r[0]} <span style="color:var(--muted);font-weight:500;">${r[1]}</span></div></div><div class="pctv">${r[2]}${arr('ch'+r[0]+r[1])}</div></div>`).join('')}</div>`;
   document.getElementById('viewHost').innerHTML=`<div class="grid row-5">${tiles}</div>
     <div class="grid mt22" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:18px;">${sales}${book}${enr}</div>
     <div class="grid mt22" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;">${deals}${channels}</div>`;
@@ -2459,7 +2469,7 @@ function renderFinance(){
 
 function syncRange(){ const r=PAGE_RANGE[current]; document.getElementById('rangeLabel').textContent=rangeLbl(r);
   const snapSec=SNAP_PAGES.includes(current)?`<div class="mlabel">Month-end close</div><select class="scope-select" data-prsel="1"><option value="">Choose a month</option>${CLOSES.map(k=>`<option value="${k}" ${r===k?'selected':''}>${rangeLbl(k)}</option>`).join('')}</select>`:'';
-  document.getElementById('rangeMenu').innerHTML=[['',"All time"]].concat(Object.keys(RANGES).filter(k=>current!=='finance'||!/week$/.test(k)).map(k=>[k,rangeLbl(k)])).map(([k,l])=>`<a href="#" data-prange="${k}" class="${(r||'')===k?'on':''}">${l}</a>`).join('')+snapSec;
+  document.getElementById('rangeMenu').innerHTML=[['',"All time"]].concat(current==='sales-marketing'?Object.keys(DAY_RANGES).map(k=>[k,DAY_RANGES[k]]):[]).concat(Object.keys(RANGES).filter(k=>current!=='finance'||!/week$/.test(k)).map(k=>[k,rangeLbl(k)])).map(([k,l])=>`<a href="#" data-prange="${k}" class="${(r||'')===k?'on':''}">${l}</a>`).join('')+snapSec;
   syncStamp(); }
 /* ---- router ---- */
 let current='overview';
@@ -2515,11 +2525,12 @@ document.addEventListener('change', e=>{
 function openExport(btn){ const m=document.getElementById('expMenu'), dw=btn.closest('aside');
   const h=dw?dw.querySelector('.dh-name'):document.querySelector('#pheadTitle h1'), what=h?h.textContent.trim():'this page';
   const rl=!dw&&(current in PAGE_RANGE)?rangeLbl(curRange()):null;
-  const prov=dw&&dw.id==='drawer', acc=dw&&dw.id==='accDrawer';
+  const prov=dw&&dw.id==='drawer', acc=dw&&dw.id==='accDrawer', prg=dw&&dw.id==='progDrawer';
   m.innerHTML=`<div class="exphd">Export ${escH(what)}</div>
     ${prov?`<a href="#" data-exp="prog"><span class="xf">PDF</span><span class="xt"><b>Progress report</b><small>For the provider\u2019s APP leader, ready to share.</small></span></a>
     <a href="#" data-exp="reqs"><span class="xf">PDF</span><span class="xt"><b>Outstanding requirements</b><small>For the provider: what\u2019s left and when it\u2019s due.</small></span></a>
     <a href="#" data-exp="lfb"><span class="xf">CSV</span><span class="xt"><b>Lecture feedback</b><small>Every rating and comment this provider gave, by lecture.</small></span></a>`:''}
+    ${prg?`<a href="#" data-exp="pcom"><span class="xf">CSV</span><span class="xt"><b>Survey comments</b><small>Every exit and confidence survey comment, one row each.</small></span></a>`:''}
     ${acc?`<a href="#" data-exp="roi"><span class="xf">PNG</span><span class="xt"><b>ROI and retention graphics</b><small>The client\u2019s ROI and retention charts, ready for a slide.</small></span></a>`:''}
     <a href="#" data-exp="pdf" ${prov?'hidden':''}><span class="xf">PDF</span><span class="xt"><b>Summary</b><small>${dw?'This record as shown, ready to share.':'The cards and charts on this page, as shown.'}</small></span></a>
     <a href="#" data-exp="csv"><span class="xf">CSV</span><span class="xt"><b>Underlying data</b><small>${dw?'Every record behind this view, one row each.':'Every row behind this page, with your current filters.'}</small></span></a>
@@ -2532,7 +2543,7 @@ document.addEventListener('click', e=>{
   const rx=e.target.closest('[data-regexp]'); if(rx){ e.preventDefault(); toast(`Sample only: ${(+rx.dataset.regexp).toLocaleString()} registrations from the last 90 days would download as a CSV (name, organization, program, track, registration date).`); return; }
   { const m=document.getElementById('expMenu');
     const xb=e.target.closest('.exportbtn'); if(xb){ if(m.classList.contains('open')&&m._btn===xb) m.classList.remove('open'); else openExport(xb); return; }
-    const xo=e.target.closest('[data-exp]'); if(xo){ e.preventDefault(); m.classList.remove('open'); const X=xo.dataset.exp; toast(X==='lfb'?`Sample only: ${m.dataset.what}\u2019s lecture feedback would download as a CSV (date, lecture, speaker, rating, comment).`:X==='prog'?`Sample only: ${m.dataset.what}\u2019s progress report would download as a PDF.`:X==='reqs'?`Sample only: ${m.dataset.what}\u2019s outstanding requirements would download as a PDF.`:X==='roi'?`Sample only: ${m.dataset.what}\u2019s ROI and retention graphics would download as images.`:`Sample only: ${m.dataset.what} ${X==='pdf'?'summary would download as a PDF':'data would download as a CSV'}.`); return; }
+    const xo=e.target.closest('[data-exp]'); if(xo){ e.preventDefault(); m.classList.remove('open'); const X=xo.dataset.exp; toast(X==='pcom'?`Sample only: ${m.dataset.what}\u2019s exit and confidence survey comments would download as a CSV (survey, date, provider, rating, comment).`:X==='lfb'?`Sample only: ${m.dataset.what}\u2019s lecture feedback would download as a CSV (date, lecture, speaker, rating, comment).`:X==='prog'?`Sample only: ${m.dataset.what}\u2019s progress report would download as a PDF.`:X==='reqs'?`Sample only: ${m.dataset.what}\u2019s outstanding requirements would download as a PDF.`:X==='roi'?`Sample only: ${m.dataset.what}\u2019s ROI and retention graphics would download as images.`:`Sample only: ${m.dataset.what} ${X==='pdf'?'summary would download as a PDF':'data would download as a CSV'}.`); return; }
     if(!e.target.closest('#expMenu')) m.classList.remove('open'); }
   const mc=e.target.closest('[data-mail]'); if(mc){ e.preventDefault(); e.stopPropagation(); copyMail(mc.dataset.mail,+mc.dataset.id,mc.dataset.ml); return; }
   const aps=e.target.closest('[data-aps]'); if(aps){ const k=aps.dataset.aps; apSort=apSort.k===k?{k,d:-apSort.d}:{k,d:k==='n'||k==='estat'?1:-1}; renderAccTab(); return; }
@@ -2902,9 +2913,9 @@ const STAB={
    + `<div class="dcard"><h4>Coaching log</h4>${log.length?dtableH([['Date'],['By'],['Focus'],['Notes']],log.map(o=>[o.d,`${o.by}<div class="wsub">${o.role}</div>`,o.t,o.note])):'<div class="dnote" style="margin:14px 18px;">No coaching notes yet.</div>'}</div>`;
  },
  lectures(s){ const d=ssynth(s), rec=LECTURES.filter(L=>L.spk.id===s.id).sort((a,b)=>b.dt-a.dt);
-   // one record: the last 8 weeks link to their feedback; older lectures follow
+   // one record, every lecture links to its feedback (Cory 11/24). Older lectures are sample records that borrow a recent class's responses
    const rows=rec.map(L=>[fmtDate(L.date),PROGS[L.p].subject,`<a class="lecl" data-lec="${L.id}">${L.n}</a>`,L.rating.toFixed(1),L.resp,L.low?`<a class="lecl plain" data-lec="${L.id}" data-lf="low">${L.low}</a>`:'0'])
-     .concat(d.lectRows.map(r=>[r[0],r[1],r[2],r[3],r[4],Math.max(0,Math.round(r[4]*(5-r[3])*0.03))]));
+     .concat(d.lectRows.map((r,j)=>{ const A=lecArch(s,j,r); return [r[0],r[1],`<a class="lecl" data-lec="${A.id}">${A.n}</a>`,A.rating.toFixed(1),A.resp,A.low?`<a class="lecl plain" data-lec="${A.id}" data-lf="low">${A.low}</a>`:'0']; }));
    return `<div class="dcard"><h4>Lecture record (${rows.length})</h4>${dtableH([['Date'],['Program'],['Lecture'],['Rating','r'],['Responses','r'],['Low scores','r']],rows)}</div>`;
  }
 };
@@ -2943,8 +2954,8 @@ let ppReq='';
 function progParticipants(pgId){ const all=ROSTER.filter(x=>x.p===pgId);
   if(!all.length) return `<div class="dcard"><h4>Participants</h4><div class="dnote">No participants in this program.</div></div>`;
   const late=x=>x.req?dsynth(x).reqList.filter(q=>q.st==='Late').map(q=>q.it):[];
-  const list=ppReq?all.filter(x=>late(x).includes(ppReq)):all;
-  const sel=`<select id="ppReq" class="apsel"><option value="">All participants</option>${REQS.map(([it])=>{ const k=all.filter(x=>late(x).includes(it)).length; return k?`<option value="${it}" ${ppReq===it?'selected':''}>Late: ${it} (${k})</option>`:''; }).join('')}</select>`;
+  const list=ppReq==='__l1'?all.filter(x=>x.r==='red'):ppReq?all.filter(x=>late(x).includes(ppReq)):all, nL1=all.filter(x=>x.r==='red').length;
+  const sel=`<select id="ppReq" class="apsel"><option value="">All participants</option>${nL1?`<option value="__l1" ${ppReq==='__l1'?'selected':''}>L1 Needs support (${nL1})</option>`:''}${REQS.map(([it])=>{ const k=all.filter(x=>late(x).includes(it)).length; return k?`<option value="${it}" ${ppReq===it?'selected':''}>Late: ${it} (${k})</option>`:''; }).join('')}</select>`;
   const rows=list.slice(0,60).map(x=>{ const [t,cl]=RD[x.r], L=late(x); return `<tr><td class="l"><span class="acc-prov" data-id="${x.id}">${x.n}</span><div class="pbyl">${ORGS[x.o]}</div>${L.length?`<div class="wsub">Late: ${L.join(', ')}</div>`:''}</td><td>${pill(RLVL[x.r],cl)}</td><td class="r">${x.comp}%</td><td>${pill(x.estat,PILLMAP[x.estat]||'lvl-muted')}</td></tr>`; }).join('');
   const foot=list.length>60?`<div class="pt-foot">Showing 60 of ${list.length} participants.</div>`:'';
   return `<div class="dcard"><div class="lchead"><h4>Participants (${list.length})</h4>${sel}</div><table class="dtable"><thead><tr><th>Participant</th><th>Readiness</th><th class="r">Completion</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div>${foot}`;
@@ -2960,9 +2971,15 @@ const PTAB={
  },
  outcomes(pg){ const d=psynth(pg); const bs=d.benchmark>=0?'+':'';
    return `<div class="dstat-row fit tight">${dstat(pg.comp,'%','Avg completion')}${pg.lift==null?dstatT('Too few','Pre/post lift'):dstat('+'+pg.lift,'%','Pre/post lift')}${pg.confLift==null?dstatT('Too few','Confidence lift'):dstat('+'+pg.confLift,'%'+tgt('35%'),'Confidence lift')}${dstat(pg.nps,tgt('55'),'Enrollee NPS')}${dstat(pg.retention,'%'+tgt('95%'),'Retention 12 mo')}</div>`
-   + `<div class="dcard"><h4>Readiness mix</h4><div class="drow">${drowF([['L3 Demonstrated',pill(pg.green+' · '+pg.readyPct+'%','lvl-green')],['L2 Developing',pill(String(pg.amber),'lvl-amber')]])}</div><div class="drow">${drowF([['L1 Needs support',pill(String(pg.red),'lvl-red')],['Lift vs all ThriveAP',dir(d.benchmark,bs+d.benchmark+' pts')]])}</div></div>`
+   + (()=>{ const R=ROSTER.filter(x=>x.p===pg.id), m=k=>{ const v=R.filter(x=>x[k]!=null); return v.length?[(v.reduce((t,x)=>t+x[k],0)/v.length).toFixed(1)+'<span class="dmuted"> / 7</span>',v.length]:null; };
+       const c=[['Baseline','conf0'],['6 months','conf6'],['12 months','conf12']].map(([l,k])=>{ const v=m(k); return [l,v?v[0]+` <span class="dmuted">· ${v[1]} responses</span>`:'<span class="dmuted">No responses yet</span>']; });
+       return `<div class="dcard"><h4>Confidence by milestone</h4><div class="drow">${drowF([c[0],c[1]])}</div><div class="drow">${drowF([c[2],['','']])}</div></div>`; })()
+   + `<div class="dcard"><h4>Readiness mix</h4><div class="drow">${drowF([['L3 Demonstrated',pill(pg.green+' · '+pg.readyPct+'%','lvl-green')],['L2 Developing',pill(String(pg.amber),'lvl-amber')]])}</div><div class="drow">${drowF([['L1 Needs support',pg.red?`<a href="#" class="ppl1" data-ppl1="1" data-tip="See them in Participants">${pill(String(pg.red),'lvl-red')}</a>`:pill('0','lvl-red')],['Lift vs all ThriveAP',dir(d.benchmark,bs+d.benchmark+' pts')]])}</div></div>`
    + `<div class="dcard"><h4>Exit survey ratings</h4><div class="drow">${drowF([['Class leader',d.classLeader+' / 5'],['Platform',d.platform+' / 5']])}</div><div class="drow">${drowF([['Zoom',d.zoom+' / 5'],['','']])}</div></div>`
    + `<div class="dcard"><h4>Exit survey: what graduates said</h4><div class="drow">${drowF([['Least helpful',lst(d.least,' mentions')],['Wanted more of',lst(d.more,' mentions')]])}</div></div>`
+   + (()=>{ const r=mulberry32(4700+pg.id), used=new Set(), take=()=>{ let t; do{ t=SURVEY_TOPICS[Math.floor(r()*SURVEY_TOPICS.length)]; }while(used.has(t)&&used.size<SURVEY_TOPICS.length); used.add(t); return t; },
+         t3=(lo,hi)=>[0,1,2].map(()=>[take(),lo+Math.floor(r()*(hi-lo+1))]).sort((a,b)=>b[1]-a[1]);
+       return `<div class="dcard"><h4>Confidence surveys: what providers said</h4><div class="drow">${drowF([['More confident in',lst(t3(5,16),' mentions')],['Still want help with',lst(t3(3,10),' mentions')]])}</div></div>`; })()
    + `<div class="dcard"><h4>Block-level outcomes</h4>${dtableH([['Block'],['Participants','r'],['Entered here','r'],['Assessment','r'],['Satisfaction','r'],['Completion','r']],d.blockRows.map((r,i)=>[r[0],r[1],d.entered[i],d.blockAsmt[i]+'%',d.blockRating[i],r[2]]))}</div>`
    + `<div class="dcard"><h4>Alumni Access</h4><div class="drow">${drowF([['Active alumni subscriptions',d.alumniSubs],['Most-watched recordings',lst(d.alumniTop,' views')]])}</div></div>`;
  },
@@ -2974,6 +2991,8 @@ function renderProgTab(){ document.getElementById('progBody').innerHTML=PTAB[pgT
 function openProgDrawer(pg){ pgRec=pg; pgTab='profile'; ppReq=''; document.getElementById('pgName').textContent=pg.subject; document.getElementById('pgSub').innerHTML=pg.day+' '+pg.per+' &middot; '+pg.facultyList[0]+(pg.facultyList.length>1?' +'+(pg.facultyList.length-1):'')+' &middot; '+pg.part+' participants'; renderProgTab(); progScrim.classList.add('open'); progDrawer.classList.add('open'); progDrawer.setAttribute('aria-hidden','false'); }
 function closeProgDrawer(){ progScrim.classList.remove('open'); progDrawer.classList.remove('open'); progDrawer.setAttribute('aria-hidden','true'); }
 progDrawer.querySelectorAll('.drawer-tabs a').forEach(a=>a.addEventListener('click',e=>{ e.preventDefault(); pgTab=a.dataset.ptab; renderProgTab(); }));
+// Cory 11/24: the Needs support count opens those participants, ready for outreach
+document.getElementById('progBody').addEventListener('click',e=>{ const a=e.target.closest('[data-ppl1]'); if(!a) return; e.preventDefault(); pgTab='participants'; ppReq='__l1'; renderProgTab(); });
 document.getElementById('progClose').addEventListener('click',closeProgDrawer);
 progScrim.addEventListener('click',closeProgDrawer);
 document.addEventListener('keydown',e=>{ if(e.key!=='Escape') return; if(drawer.classList.contains('open')) closeDrawer(); else if(spkDrawer.classList.contains('open')) closeSpkDrawer(); else if(progDrawer.classList.contains('open')) closeProgDrawer(); else if(accDrawer.classList.contains('open')) closeAccDrawer(); else if(admDrawerEl.classList.contains('open')) admCloseDrawer(); else if(repDrawerEl.classList.contains('open')) repClose(); });
@@ -3183,7 +3202,11 @@ function renderLec(){ const L=lcRec, got=L.list.filter(o=>!o.v.missed);
     + `<div class="dnote">${L.exp-L.resp} provider${L.exp-L.resp===1?'':'s'} didn't submit this survey.</div>`;
   document.getElementById('lecBody').scrollTop=0; }
 let lcP=null;
-function openLecDrawer(id,f,lp){ const L=LECTURES.find(l=>l.id===id); if(!L) return; closeDrawer(); closeSpkDrawer(); closeProgDrawer(); closeAccDrawer(); lcRec=L; lcF=f||'all'; lcP=lp!=null?+lp:null;
+const LEC_ARCH={};
+function lecArch(s,j,r){ const id='a'+s.id+'-'+j; if(LEC_ARCH[id]) return LEC_ARCH[id];
+  const pi=PROGS.findIndex(pg=>pg.subject===r[1]), pool=LECTURES.filter(L=>L.p===(pi<0?0:pi)), src=(pool.length?pool:LECTURES)[j%(pool.length||LECTURES.length)], dt=new Date(r[0]);
+  return LEC_ARCH[id]={...src,id,i:-1,n:r[2],type:'Didactic',spk:s,spkN:s.n,date:dt,dt:dt.getTime()}; }
+function openLecDrawer(id,f,lp){ const L=LECTURES.find(l=>l.id===id)||LEC_ARCH[id]; if(!L) return; closeDrawer(); closeSpkDrawer(); closeProgDrawer(); closeAccDrawer(); lcRec=L; lcF=f||'all'; lcP=lp!=null?+lp:null;
   document.getElementById('lcName').textContent=L.n; document.getElementById('lcSub').innerHTML=PROGS[L.p].short+' &middot; '+fmtDate(L.date)+' &middot; '+L.spkN;
   renderLec(); lecScrim.classList.add('open'); lecDrawer.classList.add('open'); lecDrawer.setAttribute('aria-hidden','false'); }
 function closeLecDrawer(){ lecScrim.classList.remove('open'); lecDrawer.classList.remove('open'); lecDrawer.setAttribute('aria-hidden','true'); }
